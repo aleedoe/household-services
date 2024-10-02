@@ -4,7 +4,11 @@
 
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>{% block title %}Flask App{% endblock %}</title><!-- begin::Primary Meta Tags -->
+    <title>
+      {% block title %}
+        Flask App
+      {% endblock %}
+    </title><!-- begin::Primary Meta Tags -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="title" content="AdminLTE v4 | Dashboard" />
     <meta name="author" content="ColorlibHQ" />
@@ -531,9 +535,8 @@
             <!-- begin::Row -->
             <div class="row">
               <!-- Start col -->
-              <div class="col-lg-7">
-                {% block content %}{% endblock %}
-              </div> <!-- /.Start col --> <!-- Start col -->
+              {% block content %}
+              {% endblock %}
             </div> <!-- /.row (main row) -->
           </div> <!-- end::Container -->
         </div> <!-- end::App Content -->
