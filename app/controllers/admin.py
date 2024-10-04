@@ -26,3 +26,92 @@ def controller_get_admins():
     except Exception as error:
         print(f'Error fetching admins: {error}')
         return jsonify(error="Internal server error"), 500
+
+
+def controller_delete_admin(admin_id):
+    try:
+        admin = Admin.query.get(admin_id)
+        if not admin:
+            return jsonify(error="Admin not found"), 404
+
+        db.session.delete(admin)
+        db.session.commit()
+
+        return jsonify(message="Admin deleted successfully"), 200
+
+    except Exception as error:
+        print(f'Error deleting admin: {error}')
+        return jsonify(error="Internal server error"), 500
+
+
+def controller_get_admin_by_id(admin_id):
+    try:
+        admin = Admin.query.get(admin_id)
+        if not admin:
+            return jsonify(error="Admin not found"), 404
+
+        return jsonify({
+            "id": admin.id,
+            "username": admin.username,
+            "email": admin.email
+        }), 200
+
+    except Exception as error:
+        print(f'Error fetching admin: {error}')
+        return jsonify(error="Internal server error"), 500
+
+
+def controller_create_admin():
+    try:
+        data = request.get_json()
+
+        existing_admin = Admin.query.filter((Admin.username == data['username']) | (Admin.email == data['email'])).first()
+        if existing_admin:
+            return jsonify(error="Username or email already exists"), 400
+
+        new_admin = Admin(
+            username=data['username'],
+            email=data['email']
+        )
+        new_admin.set_password(data['password'])
+
+        db.session.add(new_admin)
+        db.session.commit()
+
+        return jsonify(message="Admin created successfully", admin_id=new_admin.id), 201
+
+    except Exception as error:
+        print(f'Error creating admin: {error}')
+        return jsonify(error="Internal server error"), 500
+
+
+def controller_update_admin(admin_id):
+    try:
+        data = request.get_json()
+
+        admin = Admin.query.get(admin_id)
+        if not admin:
+            return jsonify(error="Admin not found"), 404
+
+        if 'username' in data:
+            existing_admin = Admin.query.filter_by(username=data['username']).first()
+            if existing_admin and existing_admin.id != admin_id:
+                return jsonify(error="Username already exists"), 400
+            admin.username = data['username']
+
+        if 'email' in data:
+            existing_admin = Admin.query.filter_by(email=data['email']).first()
+            if existing_admin and existing_admin.id != admin_id:
+                return jsonify(error="Email already exists"), 400
+            admin.email = data['email']
+
+        if 'password' in data and data['password']:
+            admin.set_password(data['password'])
+
+        db.session.commit()
+
+        return jsonify(message="Admin updated successfully"), 200
+
+    except Exception as error:
+        print(f'Error updating admin: {error}')
+        return jsonify(error="Internal server error"), 500
