@@ -7,7 +7,8 @@ class ServiceRequest(db.Model):
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
     service_id = db.Column(db.Integer, db.ForeignKey('service.id'), nullable=False)
     professional_id = db.Column(db.Integer, db.ForeignKey('service_professional.id'), nullable=True)
-    date_of_request = db.Column(db.DateTime, default=datetime(utcnow=True))
+    date_of_request = db.Column(db.DateTime, default=datetime.now)
+    date_of_request = db.Column(db.DateTime, default=datetime.now)
     date_of_completion = db.Column(db.DateTime, nullable=True)
     service_status = db.Column(db.String(50), nullable=False)  # e.g., requested, assigned, closed
     remarks = db.Column(db.Text, nullable=True)

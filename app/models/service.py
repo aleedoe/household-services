@@ -9,8 +9,8 @@ class Service(db.Model):
     description = db.Column(db.Text, nullable=True)
     base_price = db.Column(db.Float, nullable=False)
     time_required = db.Column(db.Integer, nullable=False)  # in minutes
-    created_at = db.Column(db.DateTime, default=datetime(utcnow=True))
-    updated_at = db.Column(db.DateTime, default=datetime(utcnow=True), onupdate=datetime(utcnow=True))
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
     
     def __repr__(self):
         return f'<Service {self.name}>'

@@ -12,7 +12,7 @@ class ServiceProfessional(db.Model):
     description = db.Column(db.Text, nullable=True)
     experience = db.Column(db.Integer, nullable=False)  # in years
     verified_status = db.Column(db.Boolean, default=False)
-    created_at = db.Column(db.DateTime, default=datetime(utcnow=True))
+    created_at = db.Column(db.DateTime, default=datetime.now)
 
     service = db.relationship('Service', backref='service_professional')
 
