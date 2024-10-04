@@ -2,6 +2,39 @@ from flask import request, jsonify, make_response
 from app.models import db, Customer
 import math
 
+def controller_get_customers():
+    try:
+        page = int(request.args.get('page', 1))
+        limit = 5
+        offset = (page - 1) * limit
+
+        total_data = Customer.query.count()
+        total_pages = math.ceil(total_data / limit)
+
+        customers_query = Customer.query.offset(offset).limit(limit).all()
+        customers_list = [{
+            "id": customer.id,
+            "username": customer.username,
+            "email": customer.email,
+            "phone": customer.phone,
+            "address": customer.address,
+            "created_at": customer.created_at
+        } for customer in customers_query]
+
+        response = {
+            'data': customers_list,
+            'message': 'success',
+            'total_pages': total_pages,
+            'total_data': total_data
+        }
+
+        return make_response(jsonify(response)), 200
+
+    except Exception as error:
+        print(f'Error fetching customers: {error}')
+        return jsonify(error="Internal server error"), 500
+
+
 
 def controller_delete_customer(customer_id):
     try:
