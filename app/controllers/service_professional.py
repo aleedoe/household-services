@@ -2,6 +2,41 @@ from flask import request, jsonify, make_response
 from app.models import db, ServiceProfessional
 import math
 
+def controller_get_service_professionals():
+    try:
+        page = int(request.args.get('page', 1))
+        limit = 5
+        offset = (page - 1) * limit
+
+        total_data = ServiceProfessional.query.count()
+        total_pages = math.ceil(total_data / limit)
+
+        professionals_query = ServiceProfessional.query.offset(offset).limit(limit).all()
+        professionals_list = [{
+            "id": professional.id,
+            "username": professional.username,
+            "email": professional.email,
+            "description": professional.description,
+            "experience": professional.experience,
+            "verified_status": professional.verified_status,
+            "service": professional.service.name if professional.service else None,
+            "created_at": professional.created_at
+        } for professional in professionals_query]
+
+        response = {
+            'data': professionals_list,
+            'message': 'success',
+            'total_pages': total_pages,
+            'total_data': total_data
+        }
+
+        return make_response(jsonify(response)), 200
+
+    except Exception as error:
+        print(f'Error fetching service professionals: {error}')
+        return jsonify(error="Internal server error"), 500
+
+
 
 def controller_delete_service_professional(professional_id):
     try:
