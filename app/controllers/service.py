@@ -2,6 +2,40 @@ from flask import request, jsonify, make_response
 from app.models import db, Service
 import math
 
+def controller_get_services():
+    try:
+        page = int(request.args.get('page', 1))
+        limit = 5
+        offset = (page - 1) * limit
+
+        total_data = Service.query.count()
+        total_pages = math.ceil(total_data / limit)
+
+        services_query = Service.query.offset(offset).limit(limit).all()
+        services_list = [{
+            "id": service.id,
+            "name": service.name,
+            "description": service.description,
+            "base_price": service.base_price,
+            "time_required": service.time_required,
+            "created_at": service.created_at,
+            "updated_at": service.updated_at
+        } for service in services_query]
+
+        response = {
+            'data': services_list,
+            'message': 'success',
+            'total_pages': total_pages,
+            'total_data': total_data
+        }
+
+        return make_response(jsonify(response)), 200
+
+    except Exception as error:
+        print(f'Error fetching services: {error}')
+        return jsonify(error="Internal server error"), 500
+
+
 def controller_delete_service(service_id):
     try:
         service = Service.query.get(service_id)
