@@ -1,4 +1,5 @@
 from . import db, datetime
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class Customer(db.Model):
@@ -11,6 +12,12 @@ class Customer(db.Model):
     phone = db.Column(db.String(15), nullable=False)
     address = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+    
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
     
     def __repr__(self):
         return f'<Customer {self.username}>'
