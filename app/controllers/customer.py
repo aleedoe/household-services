@@ -9,7 +9,6 @@ def controller_delete_customer(customer_id):
         if not customer:
             return jsonify(error="Customer not found"), 404
 
-        # Hapus customer
         db.session.delete(customer)
         db.session.commit()
 
