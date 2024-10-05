@@ -68,12 +68,15 @@
         data.data.forEach((service, index) => {
           const rowIndex = startIndex + index;
       
+          const hours = Math.floor(service.time_required / 60);
+          const minutes = service.time_required % 60;
+      
           tableBody.append(`
             <tr class="align-middle">
               <td class="text-center">${rowIndex}</td>
               <td>${service.name}</td>
-              <td>${service.base_price}</td>
-              <td>${service.time_required}</td>
+              <td>$${service.base_price}</td>
+              <td>${hours} hour ${minutes} minutes</td>
               <td class="d-flex flex-row gap-2">
                 <button type="button" class="btn btn-danger btn-sm float-end">
                   <i class="bi bi-trash"></i>
@@ -86,6 +89,7 @@
           `);
         });
       }
+      
       
       
       function createPaggination(totalPages, currentPage, totalData) {
