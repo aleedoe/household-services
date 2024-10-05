@@ -102,6 +102,12 @@
               </li>
               <li class="nav-header">MASTER</li>
               <li class="nav-item">
+                <a href="{{ url_for('pages.admin_services') }}" class="nav-link {% if request.path == '/admin/services' %}active{% endif %}">
+                  <i class="nav-icon bi bi-database"></i>
+                  <p>Services</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="./generate/theme.html" class="nav-link">
                   <i class="nav-icon bi bi-database"></i>
                   <p>Customers</p>
