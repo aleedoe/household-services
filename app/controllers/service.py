@@ -36,6 +36,53 @@ def controller_get_services():
         return jsonify(error="Internal server error"), 500
 
 
+def controller_search_services():
+    try:
+        # Get pagination parameters
+        page = int(request.json.get('page', 1))
+        limit = 5
+        offset = (page - 1) * limit
+
+        # Get search keyword from request body
+        search_keyword = request.json.get('keyword', '')
+
+        # Filter services by name (if keyword is provided)
+        if search_keyword:
+            services_query = Service.query.filter(Service.name.ilike(f'%{search_keyword}%'))
+        else:
+            services_query = Service.query
+
+        # Count total filtered services for pagination
+        total_data = services_query.count()
+        total_pages = math.ceil(total_data / limit)
+
+        # Fetch services with pagination and apply offset and limit
+        services_result = services_query.offset(offset).limit(limit).all()
+        services_list = [{
+            "id": service.id,
+            "name": service.name,
+            "description": service.description,
+            "base_price": service.base_price,
+            "time_required": service.time_required,
+            "created_at": service.created_at,
+            "updated_at": service.updated_at
+        } for service in services_result]
+
+        # Construct response
+        response = {
+            'data': services_list,
+            'message': 'success',
+            'total_pages': total_pages,
+            'total_data': total_data
+        }
+
+        return make_response(jsonify(response)), 200
+
+    except Exception as error:
+        print(f'Error searching services: {error}')
+        return jsonify(error="Internal server error"), 500
+
+
 def controller_delete_service(service_id):
     try:
         service = Service.query.get(service_id)
