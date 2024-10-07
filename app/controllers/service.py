@@ -38,25 +38,20 @@ def controller_get_services():
 
 def controller_search_services():
     try:
-        # Get pagination parameters
         page = int(request.json.get('page', 1))
         limit = 5
         offset = (page - 1) * limit
 
-        # Get search keyword from request body
         search_keyword = request.json.get('keyword', '')
 
-        # Filter services by name (if keyword is provided)
         if search_keyword:
             services_query = Service.query.filter(Service.name.ilike(f'%{search_keyword}%'))
         else:
             services_query = Service.query
 
-        # Count total filtered services for pagination
         total_data = services_query.count()
         total_pages = math.ceil(total_data / limit)
 
-        # Fetch services with pagination and apply offset and limit
         services_result = services_query.offset(offset).limit(limit).all()
         services_list = [{
             "id": service.id,
@@ -68,7 +63,6 @@ def controller_search_services():
             "updated_at": service.updated_at
         } for service in services_result]
 
-        # Construct response
         response = {
             'data': services_list,
             'message': 'success',

@@ -4,10 +4,7 @@ from app.controllers.service import *
 @apiBlueprint.route('/api/services', methods=['GET', 'POST'])
 def manage_services():
     if request.method == 'GET':
-        if request.args.get('keyword'):
-            return controller_search_services()
-        else:
-            return controller_get_services()
+        return controller_get_services()
     elif request.method == 'POST':
         return controller_create_service()
 
@@ -19,3 +16,8 @@ def manage_service(service_id):
         return controller_update_service(service_id)
     elif request.method == 'DELETE':
         return controller_delete_service(service_id)
+
+
+@apiBlueprint.route('/api/services/search', methods=['POST'])
+def manage_search_service():
+    return controller_search_services()

@@ -178,18 +178,21 @@
 
 
       let keyword_search;
-      
       function searchData(page, keyword = '') {
+
+        const perPage = 5;
+        
         console.log('keyword function', keyword);
         $.ajax({
-            url: '/api/services',
-            method: 'GET',
+            url: '/api/services/search',
+            method: 'POST',
             contentType: 'application/json',
             dataType: 'json',
             data: JSON.stringify({ page: page, keyword: keyword }),
             success: function (data) {
-              console.log('keyword dari search data', keyword);
-              console.log('data search', data);
+              console.log(data);
+              createTable(data, page, perPage);
+              createPagginationSearch(data.total_pages, page, data.total_data, keyword_search);
             },
             error: function () {
             }
@@ -197,6 +200,73 @@
       }
 
 
+      function createPagginationSearch(totalPages, currentPage, totalData, keyword_search) {  
+        const paginationContainer = $('#main-pagination ul');
+        paginationContainer.empty();
+      
+        const prevDisabled = currentPage === 1 ? 'disabled' : '';
+        const prevPage = currentPage > 1 ? currentPage - 1 : 1;
+        paginationContainer.append(`
+          <li class="page-item ${prevDisabled}">
+            <a class="page-link" href="#" onclick="searchData(${prevPage}, '${keyword_search}')">Previous</a>
+            
+          </li>
+        `);
+      
+        const firstPageActive = currentPage === 1 ? 'active' : '';
+        paginationContainer.append(`
+          <li class="page-item ${firstPageActive}">
+            <a class="page-link" href="#" onclick="searchData(1, '${keyword_search}')">1</a>
+          </li>
+        `);
+      
+        if (currentPage > 3) {
+          paginationContainer.append(`
+            <li class="page-item disabled">
+              <a class="page-link">...</a>
+            </li>
+          `);
+        }
+      
+        const startPage = Math.max(2, currentPage - 1);
+        const endPage = Math.min(totalPages - 1, currentPage + 1);
+      
+        for (let i = startPage; i <= endPage; i++) {
+          const activeClass = i === currentPage ? 'active' : '';
+          paginationContainer.append(`
+            <li class="page-item ${activeClass}">
+              <a class="page-link" href="#" onclick="searchData(${i}, '${keyword_search}')">${i}</a>
+            </li>
+          `);
+        }
+      
+        if (currentPage < totalPages - 2) {
+          paginationContainer.append(`
+            <li class="page-item disabled">
+              <a class="page-link">...</a>
+            </li>
+          `);
+        }
+      
+        if (totalPages > 1) {
+          const lastPageActive = currentPage === totalPages ? 'active' : '';
+          paginationContainer.append(`
+            <li class="page-item ${lastPageActive}">
+              <a class="page-link" href="#" onclick="searchData(${totalPages}, '${keyword_search}')">${totalPages}</a>
+            </li>
+          `);
+        }
+      
+        const nextDisabled = currentPage === totalPages ? 'disabled' : '';
+        const nextPage = currentPage < totalPages ? currentPage + 1 : totalPages;
+        paginationContainer.append(`
+          <li class="page-item ${nextDisabled}">
+            <a class="page-link" href="#" onclick="searchData(${nextPage}, '${keyword_search}')">Next</a>
+          </li>
+        `);
+      }
+      
+      
 
       function loadDataTable(page) {
 
