@@ -147,9 +147,6 @@ def controller_update_service(service_id):
             return jsonify(error="Service not found"), 404
 
         if 'name' in data:
-            existing_service = Service.query.filter_by(name=data['name']).first()
-            if existing_service and existing_service.id != service_id:
-                return jsonify(error="Service name already exists"), 400
             service.name = data['name']
 
         if 'description' in data:

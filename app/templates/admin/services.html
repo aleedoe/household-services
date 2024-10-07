@@ -3,6 +3,83 @@
 {% block title %}Service Page{% endblock %}
 
 {% block content %}
+
+<div class="modal fade" id="modal-add" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Add New Service</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="form-modal-add" class="d-flex flex-column gap-3" onsubmit="return submitFormAdd(event)">
+          <div class="mb-3">
+            <label for="service_name_add" class="form-label">Service Name</label>
+            <input type="text" class="form-control" id="service_name_add" placeholder="Enter service name" required>
+          </div>
+          <div class="mb-3">
+            <label for="service_description_add" class="form-label">Description</label>
+            <textarea class="form-control" id="service_description_add" placeholder="Enter service description"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="base_price_add" class="form-label">Base Price</label>
+            <input type="number" class="form-control" id="base_price_add" placeholder="Enter base price" required>
+          </div>
+          <div class="mb-3">
+            <label for="time_required_add" class="form-label">Time Required (hours)</label>
+            <input type="number" class="form-control" id="time_required_add" placeholder="Enter time required" required>
+          </div>
+          <button type="submit" class="btn btn-primary d-none">Submit</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="return submitFormAdd(event)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="modal-update" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="updateServiceLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="updateServiceLabel">Update Service</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="form-modal-update" class="d-flex flex-column gap-3" onsubmit="return submitFormUpdate(event)">
+          <div class="mb-3">
+            <label for="service_name_update" class="form-label">Service Name</label>
+            <input type="text" class="form-control" id="service_name_update" placeholder="Enter service name" required>
+          </div>
+          <div class="mb-3">
+            <label for="service_description_update" class="form-label">Description</label>
+            <textarea class="form-control" id="service_description_update" placeholder="Enter service description"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="base_price_update" class="form-label">Base Price</label>
+            <input type="number" class="form-control" id="base_price_update" placeholder="Enter base price" required>
+          </div>
+          <div class="mb-3">
+            <label for="time_required_update" class="form-label">Time Required (hours)</label>
+            <input type="number" class="form-control" id="time_required_update" placeholder="Enter time required" required>
+          </div>
+          <button type="submit" class="btn btn-primary d-none">Update</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="submitFormUpdate(event)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
 <div class="app-content"> <!--begin::Container-->
     <div class="container-fluid"> <!-- Timelime example  -->
         <div class="row">
@@ -17,7 +94,7 @@
                                 <button class="btn btn-primary" type="submit" id="button"><i class="bi bi-search"></i></button>
                               </form>
                             </div>
-                            <button type="button" class="btn btn-primary btn-sm float-end"><i class="bi bi-plus"></i> Add Service</button>
+                            <button type="button" class="btn btn-primary btn-sm float-end" data-bs-toggle="modal" data-bs-target="#modal-add"><i class="bi bi-plus"></i> Add Service</button>
                           </div>
                         </div>
                         <div class="card-body">
@@ -61,37 +138,63 @@
     </div> <!--end::Container-->
     <script>
 
-      function createTable(data, currentPage, perPage) {
-        const tableBody = $('#table-data tbody');
-        tableBody.empty();
-      
-        const startIndex = (currentPage - 1) * perPage + 1;
-      
-        data.data.forEach((service, index) => {
+    function createTable(data, currentPage, perPage) {
+      const tableBody = $('#table-data tbody');
+      tableBody.empty();
+
+      const startIndex = (currentPage - 1) * perPage + 1;
+
+      data.data.forEach((service, index) => {
           const rowIndex = startIndex + index;
-      
+
           const hours = Math.floor(service.time_required / 60);
           const minutes = service.time_required % 60;
-      
+
           tableBody.append(`
-            <tr class="align-middle">
-              <td class="text-center">${rowIndex}</td>
-              <td>${service.name}</td>
-              <td>$${service.base_price}</td>
-              <td>${hours} hour ${minutes} minutes</td>
-              <td class="d-flex flex-row gap-2">
-                <button type="button" class="btn btn-danger btn-sm float-end">
-                  <i class="bi bi-trash"></i>
-                </button>
-                <button type="button" class="btn btn-primary btn-sm float-end">
-                  <i class="bi bi-pencil"></i>
-                </button>
-              </td>
-            </tr>
+              <tr class="align-middle">
+                <td class="text-center">${rowIndex}</td>
+                <td>${service.name}</td>
+                <td>$${service.base_price}</td>
+                <td>${hours} hour ${minutes} minutes</td>
+                <td class="d-flex flex-row gap-2">
+                  <button type="button" class="btn btn-danger btn-sm float-end">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                  <button type="button" class="btn btn-primary btn-sm float-end" onclick="openUpdateModal(${service.id})">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                </td>
+              </tr>
           `);
+      });
+    }
+    
+    function openUpdateModal(serviceId) {
+        currentServiceId = serviceId;
+        // Ambil data service dari server dan isi form di modal
+        $.ajax({
+            url: `/api/services/${serviceId}`,
+            type: 'GET',
+            success: function (data) {
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                } else {
+                    // Isi form dengan data layanan
+                    $('#service_name_update').val(data.name);
+                    $('#service_description_update').val(data.description || '');
+                    $('#base_price_update').val(data.base_price);
+                    $('#time_required_update').val(data.time_required);
+                    // Tampilkan modal update
+                    $('#modal-update').modal('show');
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                alert('An error occurred while fetching the service data.');
+            }
         });
-      }
-      
+    }
+    
       
       function createPaggination(totalPages, currentPage, totalData) {
         const paginationContainer = $('#main-pagination ul');
@@ -158,6 +261,98 @@
         `);
       
       }
+      
+        function submitFormAdd(event) {
+          event.preventDefault();
+      
+          const service_name_add = $('#service_name_add').val();
+          const service_description_add = $('#service_description_add').val();
+          const base_price_add = $('#base_price_add').val();
+          const time_required_add = $('#time_required_add').val();
+      
+          if (!service_name_add || !base_price_add || !time_required_add) {
+              alert('Please fill in all required fields.');
+              return false;
+          }
+      
+          const serviceData = {
+              name: service_name_add,
+              description: service_description_add,
+              base_price: parseFloat(base_price_add),
+              time_required: parseInt(time_required_add)
+          };
+      
+          $.ajax({
+              url: '/api/services',
+              type: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify(serviceData),
+              success: function (data) {
+                  if (data.error) {
+                      alert('Error: ' + data.error);
+                  } else {
+                      alert('Service created successfully');
+                      $('#form-modal-add')[0].reset();
+                      $('#modal-add').modal('hide');
+                  }
+              },
+              error: function (xhr, status, error) {
+                  console.error('Error:', error);
+                  alert('An error occurred while creating the service.');
+              }
+          });
+      
+          return false;
+      }
+
+
+      let currentServiceId = null;
+
+      function submitFormUpdate(event) {
+          event.preventDefault();
+      
+          const service_name_update = $('#service_name_update').val();
+          const service_description_update = $('#service_description_update').val();
+          const base_price_update = $('#base_price_update').val();
+          const time_required_update = $('#time_required_update').val();
+      
+          if (!service_name_update || !base_price_update || !time_required_update) {
+              alert('Please fill in all required fields.');
+              return false;
+          }
+      
+          const serviceData = {
+              name: service_name_update,
+              description: service_description_update,
+              base_price: parseFloat(base_price_update),
+              time_required: parseInt(time_required_update)
+          };
+      
+          $.ajax({
+              url: `/api/services/${currentServiceId}`,
+              type: 'PUT',
+              contentType: 'application/json',
+              data: JSON.stringify(serviceData),
+              success: function (data) {
+                  if (data.error) {
+                      alert('Error: ' + data.error);
+                  } else {
+                      alert('Service updated successfully');
+                      $('#form-modal-update')[0].reset();
+                      $('#modal-update').modal('hide');
+                      // Reload the table or update the table row with new data
+                      loadServices(); // Fungsi ini harus didefinisikan untuk memuat ulang data layanan.
+                  }
+              },
+              error: function (xhr, status, error) {
+                  console.error('Error:', error);
+                  alert('An error occurred while updating the service.');
+              }
+          });
+      
+          return false;
+      }
+      
       
       
       function editService(serviceId) {
