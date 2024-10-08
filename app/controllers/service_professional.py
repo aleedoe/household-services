@@ -143,3 +143,52 @@ def controller_update_service_professional(professional_id):
     except Exception as error:
         print(f'Error updating service professional: {error}')
         return jsonify(error="Internal server error"), 500
+
+def controller_search_service_professionals():
+    try:
+        page = int(request.json.get('page', 1))
+        limit = 5
+        offset = (page - 1) * limit
+
+        search_keyword = request.json.get('keyword', '')
+
+        if search_keyword:
+            # Pencarian menggunakan username atau email yang sesuai dengan keyword
+            professionals_query = ServiceProfessional.query.filter(
+                (ServiceProfessional.username.ilike(f'%{search_keyword}%')) |
+                (ServiceProfessional.email.ilike(f'%{search_keyword}%'))
+            )
+        else:
+            professionals_query = ServiceProfessional.query
+
+        total_data = professionals_query.count()
+        total_pages = math.ceil(total_data / limit)
+
+        # Membatasi hasil pencarian dengan paginasi
+        professionals_result = professionals_query.offset(offset).limit(limit).all()
+
+        # Menyusun hasil pencarian dalam bentuk list of dict
+        professionals_list = [{
+            "id": professional.id,
+            "service_id": professional.service_id,
+            "service_name": professional.service.name,  # Relasi ke tabel Service
+            "username": professional.username,
+            "email": professional.email,
+            "description": professional.description,
+            "experience": professional.experience,
+            "verified_status": professional.verified_status,
+            "created_at": professional.created_at
+        } for professional in professionals_result]
+
+        response = {
+            'data': professionals_list,
+            'message': 'success',
+            'total_pages': total_pages,
+            'total_data': total_data
+        }
+
+        return make_response(jsonify(response)), 200
+
+    except Exception as error:
+        print(f'Error searching service professionals: {error}')
+        return jsonify(error="Internal server error"), 500

@@ -16,3 +16,7 @@ def manage_service_professional(professional_id):
         return controller_update_service_professional(professional_id)
     elif request.method == 'DELETE':
         return controller_delete_service_professional(professional_id)
+
+@apiBlueprint.route('/api/service-professionals/search', methods=['POST'])
+def manage_search_service_professionals():
+    return controller_search_service_professionals()
