@@ -133,7 +133,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="./generate/theme.html" class="nav-link">
+                <a href="{{ url_for('pages.admin_customers') }}" class="nav-link {% if request.path == '/admin/customers' %}active{% endif %}">
                   <i class="nav-icon bi bi-database"></i>
                   <p>Customers</p>
                 </a>

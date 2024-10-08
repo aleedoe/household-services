@@ -8,3 +8,7 @@ def admin_test():
 @pageBlueprint.route('/admin/services')
 def admin_services():
     return render_template('admin/services.html')
+
+@pageBlueprint.route('/admin/customers')
+def admin_customers():
+    return render_template('admin/customers.html')
