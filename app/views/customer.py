@@ -16,3 +16,8 @@ def manage_customer(customer_id):
         return controller_update_customer(customer_id)
     elif request.method == 'DELETE':
         return controller_delete_customer(customer_id)
+
+
+@apiBlueprint.route('/api/customers/search', methods=['POST'])
+def manage_search_customer():
+    return controller_search_customers()

@@ -35,6 +35,48 @@ def controller_get_customers():
         return jsonify(error="Internal server error"), 500
 
 
+def controller_search_customers():
+    try:
+        page = int(request.json.get('page', 1))
+        limit = 5
+        offset = (page - 1) * limit
+
+        search_keyword = request.json.get('keyword', '')
+
+        if search_keyword:
+            customers_query = Customer.query.filter(
+                (Customer.username.ilike(f'%{search_keyword}%')) | 
+                (Customer.email.ilike(f'%{search_keyword}%'))
+            )
+        else:
+            customers_query = Customer.query
+
+        total_data = customers_query.count()
+        total_pages = math.ceil(total_data / limit)
+
+        customers_result = customers_query.offset(offset).limit(limit).all()
+        customers_list = [{
+            "id": customer.id,
+            "username": customer.username,
+            "email": customer.email,
+            "phone": customer.phone,
+            "address": customer.address,
+            "created_at": customer.created_at
+        } for customer in customers_result]
+
+        response = {
+            'data': customers_list,
+            'message': 'success',
+            'total_pages': total_pages,
+            'total_data': total_data
+        }
+
+        return make_response(jsonify(response)), 200
+
+    except Exception as error:
+        print(f'Error searching customers: {error}')
+        return jsonify(error="Internal server error"), 500
+
 
 def controller_delete_customer(customer_id):
     try:
