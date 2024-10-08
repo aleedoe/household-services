@@ -1,0 +1,558 @@
+{% extends '/admin/layout.html' %}
+
+{% block title %}Professional Page{% endblock %}
+
+{% block content %}
+
+<div class="modal fade" id="modal-add" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addProfessionalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="addProfessionalLabel">Add New Service Professional</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="form-modal-add" class="d-flex flex-column gap-3" onsubmit="return submitFormAdd(event)">
+          <div class="mb-3">
+            <label for="service_id_add" class="form-label">Service ID</label>
+            <input type="number" class="form-control" id="service_id_add" placeholder="Enter service ID" required>
+          </div>
+          <div class="mb-3">
+            <label for="username_add_prof" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username_add_prof" placeholder="Enter username" required>
+          </div>
+          <div class="mb-3">
+            <label for="email_add_prof" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email_add_prof" placeholder="Enter email" required>
+          </div>
+          <div class="mb-3">
+            <label for="password_add_prof" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password_add_prof" placeholder="Enter password" required>
+          </div>
+          <div class="mb-3">
+            <label for="experience_add" class="form-label">Experience (years)</label>
+            <input type="number" class="form-control" id="experience_add" placeholder="Enter experience in years" required>
+          </div>
+          <div class="mb-3">
+            <label for="description_add" class="form-label">Description</label>
+            <textarea class="form-control" id="description_add" placeholder="Enter description"></textarea>
+          </div>
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="verified_add">
+            <label for="verified_add" class="form-check-label">Verified</label>
+          </div>
+          <button type="submit" class="btn btn-primary d-none">Submit</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="return submitFormAdd(event)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="modal fade" id="modal-update" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="updateCustomerLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="updateCustomerLabel">Update Customer</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="form-modal-update" class="d-flex flex-column gap-3" onsubmit="return submitFormUpdate(event)">
+          <div class="mb-3">
+            <label for="customer_username_update" class="form-label">Username</label>
+            <input type="text" class="form-control" id="customer_username_update" placeholder="Enter username" required>
+          </div>
+          <div class="mb-3">
+            <label for="customer_email_update" class="form-label">Email</label>
+            <input type="email" class="form-control" id="customer_email_update" placeholder="Enter email" required>
+          </div>
+          <div class="mb-3">
+            <label for="customer_phone_update" class="form-label">Phone</label>
+            <input type="text" class="form-control" id="customer_phone_update" placeholder="Enter phone number" required>
+          </div>
+          <div class="mb-3">
+            <label for="customer_address_update" class="form-label">Address</label>
+            <textarea class="form-control" id="customer_address_update" placeholder="Enter address"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="customer_password_update" class="form-label">Password</label>
+            <input type="password" class="form-control" id="customer_password_update" placeholder="Enter password (optional)">
+          </div>
+          <button type="submit" class="btn btn-primary d-none">Update</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="submitFormUpdate(event)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="modal-delete" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteServiceLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="deleteServiceLabel">Delete Customer</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete this customer?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" onclick="submitFormDelete()">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="app-content"> <!--begin::Container-->
+    <div class="container-fluid"> <!-- Timelime example  -->
+        <div class="row">
+            <div class="col-12"> <!-- The icons -->
+                <div class="col-12">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header">
+                          <div class="d-flex justify-content-between w-100">
+                            <div class="input-group w-25 input-group-sm">
+                              <form id="search-user" class="d-flex flex-row gap-2">
+                                <input type="text" class="form-control" placeholder="Serach" aria-label="Recipient's username" aria-describedby="searchInput" id="searchInput">
+                                <button class="btn btn-primary" type="submit" id="button"><i class="bi bi-search"></i></button>
+                              </form>
+                            </div>
+                            <button type="button" class="btn btn-primary btn-sm float-end" data-bs-toggle="modal" data-bs-target="#modal-add"><i class="bi bi-plus"></i> Add SP</button>
+                          </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-body">
+                                <table class="table table-bordered table-striped" id="table-data">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 30px">No</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Experience</th>
+                                            <th>Verified status</th>
+                                            <th>Service</th>
+                                            <th>Created</th>
+                                            <th style="width: 40px" class="text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div> <!-- /.card-body -->
+                            <div class="card-footer clearfix">
+                                <nav aria-label="..." id="main-pagination">
+                                  <ul class="pagination pagination-sm m-0 float-end">
+                                    <li class="page-item disabled">
+                                      <a class="page-link">Previous</a>
+                                    </li>
+                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item active" aria-current="page">
+                                      <a class="page-link" href="#">2</a>
+                                    </li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item">
+                                      <a class="page-link" href="#">Next</a>
+                                    </li>
+                                  </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- /.col -->
+        </div> <!-- /.row -->
+    </div> <!--end::Container-->
+    <script>
+
+    function createTable(data, currentPage, perPage) {
+      const tableBody = $('#table-data tbody');
+      tableBody.empty();
+    
+      const startIndex = (currentPage - 1) * perPage + 1;
+    
+      data.data.forEach((professional, index) => {
+        const rowIndex = startIndex + index;
+    
+        tableBody.append(`
+          <tr class="align-middle">
+            <td class="text-center">${rowIndex}</td>
+            <td>${professional.username}</td>
+            <td>${professional.email}</td>
+            <td>${professional.experience || '-'}</td>
+            <td>${professional.verified_status ? 'Verified' : 'Not Verified'}</td>
+            <td>${professional.service || 'N/A'}</td>
+            <td>${new Date(professional.created_at).toLocaleDateString()}</td>
+            <td class="d-flex flex-row gap-2">
+              <button type="button" class="btn btn-danger btn-sm" onclick="openDeleteModal(${professional.id})">
+                <i class="bi bi-trash"></i>
+              </button>
+              <button type="button" class="btn btn-primary btn-sm" onclick="openUpdateModal(${professional.id})">
+                <i class="bi bi-pencil"></i>
+              </button>
+            </td>
+          </tr>
+        `);
+      });
+    }
+    
+    function openUpdateModal(customerId) {
+      currentCustomerId = customerId;
+      $.ajax({
+          url: `/api/customers/${customerId}`,
+          type: 'GET',
+          success: function (data) {
+              if (data.error) {
+                  alert('Error: ' + data.error);
+              } else {
+                  $('#customer_username_update').val(data.username);
+                  $('#customer_email_update').val(data.email);
+                  $('#customer_phone_update').val(data.phone);
+                  $('#customer_address_update').val(data.address);
+                  $('#customer_password_update').val(''); // password reset (optional)
+                  $('#modal-update').modal('show');
+              }
+          },
+          error: function (xhr, status, error) {
+              console.error('Error:', error);
+              alert('An error occurred while fetching the customer data.');
+          }
+      });
+  }
+
+    function openDeleteModal(customerID) {
+      currentDeleteServiceId = customerID;
+      $('#modal-delete').modal('show');
+    }
+
+      
+      function createPaggination(totalPages, currentPage, totalData) {
+        const paginationContainer = $('#main-pagination ul');
+        paginationContainer.empty();
+      
+        const prevDisabled = currentPage === 1 ? 'disabled' : '';
+        const prevPage = currentPage > 1 ? currentPage - 1 : 1;
+        paginationContainer.append(`
+          <li class="page-item ${prevDisabled}">
+            <a class="page-link" href="#" onclick="loadDataTable(${prevPage})">Previous</a>
+          </li>
+        `);
+      
+        const firstPageActive = currentPage === 1 ? 'active' : '';
+        paginationContainer.append(`
+          <li class="page-item ${firstPageActive}">
+            <a class="page-link" href="#" onclick="loadDataTable(1)">1</a>
+          </li>
+        `);
+      
+        if (currentPage > 3) {
+          paginationContainer.append(`
+            <li class="page-item disabled">
+              <a class="page-link">...</a>
+            </li>
+          `);
+        }
+      
+        const startPage = Math.max(2, currentPage - 1);
+        const endPage = Math.min(totalPages - 1, currentPage + 1);
+      
+        for (let i = startPage; i <= endPage; i++) {
+          const activeClass = i === currentPage ? 'active' : '';
+          paginationContainer.append(`
+            <li class="page-item ${activeClass}">
+              <a class="page-link" href="#" onclick="loadDataTable(${i})">${i}</a>
+            </li>
+          `);
+        }
+      
+        if (currentPage < totalPages - 2) {
+          paginationContainer.append(`
+            <li class="page-item disabled">
+              <a class="page-link">...</a>
+            </li>
+          `);
+        }
+      
+        if (totalPages > 1) {
+          const lastPageActive = currentPage === totalPages ? 'active' : '';
+          paginationContainer.append(`
+            <li class="page-item ${lastPageActive}">
+              <a class="page-link" href="#" onclick="loadDataTable(${totalPages})">${totalPages}</a>
+            </li>
+          `);
+        }
+      
+        const nextDisabled = currentPage === totalPages ? 'disabled' : '';
+        const nextPage = currentPage < totalPages ? currentPage + 1 : totalPages;
+        paginationContainer.append(`
+          <li class="page-item ${nextDisabled}">
+            <a class="page-link" href="#" onclick="loadDataTable(${nextPage})">Next</a>
+          </li>
+        `);
+      
+      }
+      
+      function submitFormAdd(event) {
+        event.preventDefault();
+      
+        const service_id = $('#service_id_add').val();
+        const username = $('#username_add_prof').val();
+        const email = $('#email_add_prof').val();
+        const password = $('#password_add_prof').val();
+        const experience = $('#experience_add').val();
+        const description = $('#description_add').val();
+        const verified_status = $('#verified_add').is(':checked');
+      
+        // Basic validation to ensure required fields are filled
+        if (!service_id || !username || !email || !password || !experience) {
+          alert('Please fill in all required fields.');
+          return false;
+        }
+      
+        const professionalData = {
+          service_id: service_id,
+          username: username,
+          email: email,
+          password: password,
+          experience: experience,
+          description: description,
+          verified_status: verified_status
+        };
+      
+        // Send AJAX POST request to create new service professional
+        $.ajax({
+          url: '/api/service-professionals',
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify(professionalData),
+          success: function (data) {
+            if (data.error) {
+              alert('Error: ' + data.error);
+            } else {
+              alert('Service Professional created successfully');
+              $('#form-modal-add')[0].reset();
+              $('#modal-add').modal('hide');
+              loadDataTable(1); // Optional: Refresh data in table if needed
+            }
+          },
+          error: function (xhr, status, error) {
+            console.error('Error:', error);
+            alert('An error occurred while creating the service professional.');
+          }
+        });
+      
+        return false;
+      }
+    
+
+
+      let currentCustomerId = null;
+
+      function submitFormUpdate(event) {
+        event.preventDefault();
+        
+        const customer_username_update = $('#customer_username_update').val();
+        const customer_email_update = $('#customer_email_update').val();
+        const customer_phone_update = $('#customer_phone_update').val();
+        const customer_address_update = $('#customer_address_update').val();
+        const customer_password_update = $('#customer_password_update').val();
+        
+        if (!customer_username_update || !customer_email_update || !customer_phone_update) {
+            alert('Please fill in all required fields.');
+            return false;
+        }
+        
+        const customerData = {
+            username: customer_username_update,
+            email: customer_email_update,
+            phone: customer_phone_update,
+            address: customer_address_update,
+            password: customer_password_update // optional
+        };
+    
+        // Remove password from payload if not provided
+        if (!customer_password_update) {
+            delete customerData.password;
+        }
+    
+        $.ajax({
+            url: `/api/customers/${currentCustomerId}`,
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(customerData),
+            success: function (data) {
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                } else {
+                    alert('Customer updated successfully');
+                    $('#form-modal-update')[0].reset();
+                    $('#modal-update').modal('hide');
+                    loadDataTable(1);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                alert('An error occurred while updating the customer.');
+            }
+        });
+    
+        return false;
+    }
+      
+      function submitFormDelete() {
+          if (!currentDeleteServiceId) {
+              alert('No customer selected for deletion.');
+              return;
+          }
+
+          $.ajax({
+              url: `/api/customers/${currentDeleteServiceId}`,
+              type: 'DELETE',
+              success: function (data) {
+                  if (data.error) {
+                      alert('Error: ' + data.error);
+                  } else {
+                      alert('Customer deleted successfully');
+                      $('#modal-delete').modal('hide');
+                      loadDataTable(1);
+                  }
+              },
+              error: function (xhr, status, error) {
+                  console.error('Error:', error);
+                  alert('An error occurred while deleting the customer.');
+              }
+          });
+      }
+
+      $('#search-user').on('submit', function (event) {
+        event.preventDefault();
+        var keyword = $('#searchInput').val();
+        console.log('keyword', keyword);
+        keyword_search = keyword
+        searchData(1, keyword);
+      });
+
+
+      let keyword_search;
+      function searchData(page, keyword = '') {
+
+        const perPage = 5;
+        
+        console.log('keyword function', keyword);
+        $.ajax({
+            url: '/api/customers/search',
+            method: 'POST',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify({ page: page, keyword: keyword }),
+            success: function (data) {
+              console.log(data);
+              createTable(data, page, perPage);
+              createPagginationSearch(data.total_pages, page, data.total_data, keyword_search);
+            },
+            error: function () {
+            }
+        });
+      }
+
+
+      function createPagginationSearch(totalPages, currentPage, totalData, keyword_search) {  
+        const paginationContainer = $('#main-pagination ul');
+        paginationContainer.empty();
+      
+        const prevDisabled = currentPage === 1 ? 'disabled' : '';
+        const prevPage = currentPage > 1 ? currentPage - 1 : 1;
+        paginationContainer.append(`
+          <li class="page-item ${prevDisabled}">
+            <a class="page-link" href="#" onclick="searchData(${prevPage}, '${keyword_search}')">Previous</a>
+            
+          </li>
+        `);
+      
+        const firstPageActive = currentPage === 1 ? 'active' : '';
+        paginationContainer.append(`
+          <li class="page-item ${firstPageActive}">
+            <a class="page-link" href="#" onclick="searchData(1, '${keyword_search}')">1</a>
+          </li>
+        `);
+      
+        if (currentPage > 3) {
+          paginationContainer.append(`
+            <li class="page-item disabled">
+              <a class="page-link">...</a>
+            </li>
+          `);
+        }
+      
+        const startPage = Math.max(2, currentPage - 1);
+        const endPage = Math.min(totalPages - 1, currentPage + 1);
+      
+        for (let i = startPage; i <= endPage; i++) {
+          const activeClass = i === currentPage ? 'active' : '';
+          paginationContainer.append(`
+            <li class="page-item ${activeClass}">
+              <a class="page-link" href="#" onclick="searchData(${i}, '${keyword_search}')">${i}</a>
+            </li>
+          `);
+        }
+      
+        if (currentPage < totalPages - 2) {
+          paginationContainer.append(`
+            <li class="page-item disabled">
+              <a class="page-link">...</a>
+            </li>
+          `);
+        }
+      
+        if (totalPages > 1) {
+          const lastPageActive = currentPage === totalPages ? 'active' : '';
+          paginationContainer.append(`
+            <li class="page-item ${lastPageActive}">
+              <a class="page-link" href="#" onclick="searchData(${totalPages}, '${keyword_search}')">${totalPages}</a>
+            </li>
+          `);
+        }
+      
+        const nextDisabled = currentPage === totalPages ? 'disabled' : '';
+        const nextPage = currentPage < totalPages ? currentPage + 1 : totalPages;
+        paginationContainer.append(`
+          <li class="page-item ${nextDisabled}">
+            <a class="page-link" href="#" onclick="searchData(${nextPage}, '${keyword_search}')">Next</a>
+          </li>
+        `);
+      }
+      
+      
+
+      function loadDataTable(page) {
+        const perPage = 5;
+
+        $.ajax({
+          url: `/api/service-professionals?page=${page}`,
+          method: 'GET',
+          dataType: 'json',
+          success: function (data) {
+            createTable(data, page, perPage);
+            createPaggination(data.total_pages, page, data.total_data);
+          },
+          error: function () {
+            console.error("Error fetching service professionals data");
+          }
+        });
+      }
+      
+      loadDataTable(1);
+    </script>
+{% endblock %}
