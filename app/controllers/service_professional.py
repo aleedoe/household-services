@@ -116,9 +116,6 @@ def controller_update_service_professional(professional_id):
             professional.service_id = data['service_id']
 
         if 'username' in data:
-            existing_professional = ServiceProfessional.query.filter_by(username=data['username']).first()
-            if existing_professional and existing_professional.id != professional_id:
-                return jsonify(error="Username already exists"), 400
             professional.username = data['username']
 
         if 'email' in data:
