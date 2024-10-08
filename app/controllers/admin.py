@@ -94,9 +94,6 @@ def controller_update_admin(admin_id):
             return jsonify(error="Admin not found"), 404
 
         if 'username' in data:
-            existing_admin = Admin.query.filter_by(username=data['username']).first()
-            if existing_admin and existing_admin.id != admin_id:
-                return jsonify(error="Username already exists"), 400
             admin.username = data['username']
 
         if 'email' in data:
