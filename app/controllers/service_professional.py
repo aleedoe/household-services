@@ -170,8 +170,7 @@ def controller_search_service_professionals():
         # Menyusun hasil pencarian dalam bentuk list of dict
         professionals_list = [{
             "id": professional.id,
-            "service_id": professional.service_id,
-            "service_name": professional.service.name,  # Relasi ke tabel Service
+            "service": professional.service.name if professional.service else None,
             "username": professional.username,
             "email": professional.email,
             "description": professional.description,
