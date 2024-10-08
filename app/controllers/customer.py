@@ -107,9 +107,6 @@ def controller_update_customer(customer_id):
             return jsonify(error="Customer not found"), 404
 
         if 'username' in data:
-            existing_customer = Customer.query.filter_by(username=data['username']).first()
-            if existing_customer and existing_customer.id != customer_id:
-                return jsonify(error="Username already exists"), 400
             customer.username = data['username']
 
         if 'email' in data:

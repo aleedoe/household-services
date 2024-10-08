@@ -46,30 +46,34 @@
 
 
 
-<div class="modal fade" id="modal-update" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="updateServiceLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
+<div class="modal fade" id="modal-update" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="updateCustomerLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="updateServiceLabel">Update Service</h1>
+        <h1 class="modal-title fs-5" id="updateCustomerLabel">Update Customer</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form id="form-modal-update" class="d-flex flex-column gap-3" onsubmit="return submitFormUpdate(event)">
           <div class="mb-3">
-            <label for="service_name_update" class="form-label">Service Name</label>
-            <input type="text" class="form-control" id="service_name_update" placeholder="Enter service name" required>
+            <label for="customer_username_update" class="form-label">Username</label>
+            <input type="text" class="form-control" id="customer_username_update" placeholder="Enter username" required>
           </div>
           <div class="mb-3">
-            <label for="service_description_update" class="form-label">Description</label>
-            <textarea class="form-control" id="service_description_update" placeholder="Enter service description"></textarea>
+            <label for="customer_email_update" class="form-label">Email</label>
+            <input type="email" class="form-control" id="customer_email_update" placeholder="Enter email" required>
           </div>
           <div class="mb-3">
-            <label for="base_price_update" class="form-label">Base Price</label>
-            <input type="number" class="form-control" id="base_price_update" placeholder="Enter base price" required>
+            <label for="customer_phone_update" class="form-label">Phone</label>
+            <input type="text" class="form-control" id="customer_phone_update" placeholder="Enter phone number" required>
           </div>
           <div class="mb-3">
-            <label for="time_required_update" class="form-label">Time Required (hours)</label>
-            <input type="number" class="form-control" id="time_required_update" placeholder="Enter time required" required>
+            <label for="customer_address_update" class="form-label">Address</label>
+            <textarea class="form-control" id="customer_address_update" placeholder="Enter address"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="customer_password_update" class="form-label">Password</label>
+            <input type="password" class="form-control" id="customer_password_update" placeholder="Enter password (optional)">
           </div>
           <button type="submit" class="btn btn-primary d-none">Update</button>
         </form>
@@ -81,6 +85,7 @@
     </div>
   </div>
 </div>
+
 
 
 <div class="modal fade" id="modal-delete" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteServiceLabel" aria-hidden="true">
@@ -183,7 +188,7 @@
               <button type="button" class="btn btn-danger btn-sm float-end" onclick="openDeleteCustomerModal(${customer.id})">
                 <i class="bi bi-trash"></i>
               </button>
-              <button type="button" class="btn btn-primary btn-sm float-end" onclick="openUpdateCustomerModal(${customer.id})">
+              <button type="button" class="btn btn-primary btn-sm float-end" onclick="openUpdateModal(${customer.id})">
                 <i class="bi bi-pencil"></i>
               </button>
             </td>
@@ -192,28 +197,29 @@
       });
     }
     
-    function openUpdateModal(serviceId) {
-        currentServiceId = serviceId;
-        $.ajax({
-            url: `/api/services/${serviceId}`,
-            type: 'GET',
-            success: function (data) {
-                if (data.error) {
-                    alert('Error: ' + data.error);
-                } else {
-                    $('#service_name_update').val(data.name);
-                    $('#service_description_update').val(data.description || '');
-                    $('#base_price_update').val(data.base_price);
-                    $('#time_required_update').val(data.time_required);
-                    $('#modal-update').modal('show');
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error('Error:', error);
-                alert('An error occurred while fetching the service data.');
-            }
-        });
-    }
+    function openUpdateModal(customerId) {
+      currentCustomerId = customerId;
+      $.ajax({
+          url: `/api/customers/${customerId}`,
+          type: 'GET',
+          success: function (data) {
+              if (data.error) {
+                  alert('Error: ' + data.error);
+              } else {
+                  $('#customer_username_update').val(data.username);
+                  $('#customer_email_update').val(data.email);
+                  $('#customer_phone_update').val(data.phone);
+                  $('#customer_address_update').val(data.address);
+                  $('#customer_password_update').val(''); // password reset (optional)
+                  $('#modal-update').modal('show');
+              }
+          },
+          error: function (xhr, status, error) {
+              console.error('Error:', error);
+              alert('An error occurred while fetching the customer data.');
+          }
+      });
+  }
 
     function openDeleteModal(serviceId) {
       currentDeleteServiceId = serviceId;
@@ -337,51 +343,58 @@
     
 
 
-      let currentServiceId = null;
+      let currentCustomerId = null;
 
       function submitFormUpdate(event) {
-          event.preventDefault();
-      
-          const service_name_update = $('#service_name_update').val();
-          const service_description_update = $('#service_description_update').val();
-          const base_price_update = $('#base_price_update').val();
-          const time_required_update = $('#time_required_update').val();
-      
-          if (!service_name_update || !base_price_update || !time_required_update) {
-              alert('Please fill in all required fields.');
-              return false;
-          }
-      
-          const serviceData = {
-              name: service_name_update,
-              description: service_description_update,
-              base_price: parseFloat(base_price_update),
-              time_required: parseInt(time_required_update)
-          };
-      
-          $.ajax({
-              url: `/api/services/${currentServiceId}`,
-              type: 'PUT',
-              contentType: 'application/json',
-              data: JSON.stringify(serviceData),
-              success: function (data) {
-                  if (data.error) {
-                      alert('Error: ' + data.error);
-                  } else {
-                      alert('Service updated successfully');
-                      $('#form-modal-update')[0].reset();
-                      $('#modal-update').modal('hide');
-                      loadDataTable(1);
-                  }
-              },
-              error: function (xhr, status, error) {
-                  console.error('Error:', error);
-                  alert('An error occurred while updating the service.');
-              }
-          });
-      
-          return false;
-      }
+        event.preventDefault();
+        
+        const customer_username_update = $('#customer_username_update').val();
+        const customer_email_update = $('#customer_email_update').val();
+        const customer_phone_update = $('#customer_phone_update').val();
+        const customer_address_update = $('#customer_address_update').val();
+        const customer_password_update = $('#customer_password_update').val();
+        
+        if (!customer_username_update || !customer_email_update || !customer_phone_update) {
+            alert('Please fill in all required fields.');
+            return false;
+        }
+        
+        const customerData = {
+            username: customer_username_update,
+            email: customer_email_update,
+            phone: customer_phone_update,
+            address: customer_address_update,
+            password: customer_password_update // optional
+        };
+    
+        // Remove password from payload if not provided
+        if (!customer_password_update) {
+            delete customerData.password;
+        }
+    
+        $.ajax({
+            url: `/api/customers/${currentCustomerId}`,
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(customerData),
+            success: function (data) {
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                } else {
+                    alert('Customer updated successfully');
+                    $('#form-modal-update')[0].reset();
+                    $('#modal-update').modal('hide');
+                    loadDataTable(1); // Reload the customer data table
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                alert('An error occurred while updating the customer.');
+            }
+        });
+    
+        return false;
+    }
       
       function submitFormDelete() {
           if (!currentDeleteServiceId) {
