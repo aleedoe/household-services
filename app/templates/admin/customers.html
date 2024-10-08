@@ -121,8 +121,10 @@
                                         <tr>
                                             <th style="width: 30px">No</th>
                                             <th>Name</th>
-                                            <th>Base Price</th>
-                                            <th>Time Required</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Address</th>
+                                            <th>Created</th>
                                             <th style="width: 40px" class="text-center">Action</th>
                                         </tr>
                                     </thead>
@@ -158,31 +160,30 @@
     function createTable(data, currentPage, perPage) {
       const tableBody = $('#table-data tbody');
       tableBody.empty();
-
+    
       const startIndex = (currentPage - 1) * perPage + 1;
-
-      data.data.forEach((service, index) => {
-          const rowIndex = startIndex + index;
-
-          const hours = Math.floor(service.time_required / 60);
-          const minutes = service.time_required % 60;
-
-          tableBody.append(`
-              <tr class="align-middle">
-                <td class="text-center">${rowIndex}</td>
-                <td>${service.name}</td>
-                <td>$${service.base_price}</td>
-                <td>${hours} hour ${minutes} minutes</td>
-                <td class="d-flex flex-row gap-2">
-                  <button type="button" class="btn btn-danger btn-sm float-end" onclick="openDeleteModal(${service.id})">
-                    <i class="bi bi-trash"></i>
-                  </button>
-                  <button type="button" class="btn btn-primary btn-sm float-end" onclick="openUpdateModal(${service.id})">
-                    <i class="bi bi-pencil"></i>
-                  </button>
-                </td>
-              </tr>
-          `);
+    
+      data.data.forEach((customer, index) => {
+        const rowIndex = startIndex + index;
+    
+        tableBody.append(`
+          <tr class="align-middle">
+            <td class="text-center">${rowIndex}</td>
+            <td>${customer.username}</td>
+            <td>${customer.email}</td>
+            <td>${customer.phone}</td>
+            <td>${customer.address}</td>
+            <td>${new Date(customer.created_at).toLocaleDateString()}</td>
+            <td class="d-flex flex-row gap-2">
+              <button type="button" class="btn btn-danger btn-sm float-end" onclick="openDeleteCustomerModal(${customer.id})">
+                <i class="bi bi-trash"></i>
+              </button>
+              <button type="button" class="btn btn-primary btn-sm float-end" onclick="openUpdateCustomerModal(${customer.id})">
+                <i class="bi bi-pencil"></i>
+              </button>
+            </td>
+          </tr>
+        `);
       });
     }
     
@@ -498,11 +499,10 @@
       
 
       function loadDataTable(page) {
-
         const perPage = 5;
-        
+
         $.ajax({
-          url: '/api/services?page=' + page,
+          url: '/api/customers?page=' + page,
           method: 'GET',
           dataType: 'json',
           success: function (data) {
@@ -510,9 +510,10 @@
             createPaggination(data.total_pages, page, data.total_data);
           },
           error: function () {
-          }
-        })
-      };
+            console.error("Error fetching customer data");
+          } 
+        });
+      }
       
       loadDataTable(1);
     </script>
