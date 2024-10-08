@@ -55,34 +55,41 @@
 
 
 
-<div class="modal fade" id="modal-update" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="updateCustomerLabel" aria-hidden="true">
+<div class="modal fade" id="modal-update" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="updateProfessionalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="updateCustomerLabel">Update Customer</h1>
+        <h1 class="modal-title fs-5" id="updateProfessionalLabel">Update Service Professional</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form id="form-modal-update" class="d-flex flex-column gap-3" onsubmit="return submitFormUpdate(event)">
           <div class="mb-3">
-            <label for="customer_username_update" class="form-label">Username</label>
-            <input type="text" class="form-control" id="customer_username_update" placeholder="Enter username" required>
+            <label for="professional_service_id_update" class="form-label">Service ID</label>
+            <input type="number" class="form-control" id="professional_service_id_update" placeholder="Enter service ID" required>
           </div>
           <div class="mb-3">
-            <label for="customer_email_update" class="form-label">Email</label>
-            <input type="email" class="form-control" id="customer_email_update" placeholder="Enter email" required>
+            <label for="professional_username_update" class="form-label">Username</label>
+            <input type="text" class="form-control" id="professional_username_update" placeholder="Enter username" required>
           </div>
           <div class="mb-3">
-            <label for="customer_phone_update" class="form-label">Phone</label>
-            <input type="text" class="form-control" id="customer_phone_update" placeholder="Enter phone number" required>
+            <label for="professional_email_update" class="form-label">Email</label>
+            <input type="email" class="form-control" id="professional_email_update" placeholder="Enter email" required>
           </div>
           <div class="mb-3">
-            <label for="customer_address_update" class="form-label">Address</label>
-            <textarea class="form-control" id="customer_address_update" placeholder="Enter address"></textarea>
+            <label for="professional_experience_update" class="form-label">Experience</label>
+            <input type="text" class="form-control" id="professional_experience_update" placeholder="Enter experience" required>
           </div>
           <div class="mb-3">
-            <label for="customer_password_update" class="form-label">Password</label>
-            <input type="password" class="form-control" id="customer_password_update" placeholder="Enter password (optional)">
+            <label for="professional_description_update" class="form-label">Description</label>
+            <textarea class="form-control" id="professional_description_update" placeholder="Enter description"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="professional_verified_status_update" class="form-label">Verified Status</label>
+            <select id="professional_verified_status_update" class="form-select">
+              <option value="false">Not Verified</option>
+              <option value="true">Verified</option>
+            </select>
           </div>
           <button type="submit" class="btn btn-primary d-none">Update</button>
         </form>
@@ -94,6 +101,7 @@
     </div>
   </div>
 </div>
+
 
 
 
@@ -135,6 +143,7 @@
                         </div>
                         <div class="card-body">
                             <div class="card-body">
+                              <div class="table-responsive">
                                 <table class="table table-bordered table-striped" id="table-data">
                                     <thead>
                                         <tr>
@@ -151,6 +160,7 @@
                                     <tbody>
                                     </tbody>
                                 </table>
+                              </div>
                             </div> <!-- /.card-body -->
                             <div class="card-footer clearfix">
                                 <nav aria-label="..." id="main-pagination">
@@ -208,26 +218,27 @@
       });
     }
     
-    function openUpdateModal(customerId) {
-      currentCustomerId = customerId;
+    function openUpdateModal(professionalId) {
+      currentProfessionalId = professionalId;
       $.ajax({
-          url: `/api/customers/${customerId}`,
+          url: `/api/service-professionals/${professionalId}`,
           type: 'GET',
           success: function (data) {
               if (data.error) {
                   alert('Error: ' + data.error);
               } else {
-                  $('#customer_username_update').val(data.username);
-                  $('#customer_email_update').val(data.email);
-                  $('#customer_phone_update').val(data.phone);
-                  $('#customer_address_update').val(data.address);
-                  $('#customer_password_update').val(''); // password reset (optional)
+                  $('#professional_service_id_update').val(data.service_id);
+                  $('#professional_username_update').val(data.username);
+                  $('#professional_email_update').val(data.email);
+                  $('#professional_experience_update').val(data.experience);
+                  $('#professional_description_update').val(data.description);
+                  $('#professional_verified_status_update').val(data.verified_status ? 'true' : 'false');
                   $('#modal-update').modal('show');
               }
           },
           error: function (xhr, status, error) {
               console.error('Error:', error);
-              alert('An error occurred while fetching the customer data.');
+              alert('An error occurred while fetching the professional data.');
           }
       });
   }
@@ -358,53 +369,50 @@
     
 
 
-      let currentCustomerId = null;
+      let currentProfessionalId = null;
 
       function submitFormUpdate(event) {
         event.preventDefault();
-        
-        const customer_username_update = $('#customer_username_update').val();
-        const customer_email_update = $('#customer_email_update').val();
-        const customer_phone_update = $('#customer_phone_update').val();
-        const customer_address_update = $('#customer_address_update').val();
-        const customer_password_update = $('#customer_password_update').val();
-        
-        if (!customer_username_update || !customer_email_update || !customer_phone_update) {
+    
+        const professional_service_id_update = $('#professional_service_id_update').val();
+        const professional_username_update = $('#professional_username_update').val();
+        const professional_email_update = $('#professional_email_update').val();
+        const professional_experience_update = $('#professional_experience_update').val();
+        const professional_description_update = $('#professional_description_update').val();
+        const professional_verified_status_update = $('#professional_verified_status_update').val();
+    
+        if (!professional_service_id_update || !professional_username_update || !professional_email_update || !professional_experience_update) {
             alert('Please fill in all required fields.');
             return false;
         }
-        
-        const customerData = {
-            username: customer_username_update,
-            email: customer_email_update,
-            phone: customer_phone_update,
-            address: customer_address_update,
-            password: customer_password_update // optional
+    
+        const professionalData = {
+            service_id: professional_service_id_update,
+            username: professional_username_update,
+            email: professional_email_update,
+            experience: professional_experience_update,
+            description: professional_description_update,
+            verified_status: professional_verified_status_update === 'true'
         };
     
-        // Remove password from payload if not provided
-        if (!customer_password_update) {
-            delete customerData.password;
-        }
-    
         $.ajax({
-            url: `/api/customers/${currentCustomerId}`,
+            url: `/api/service-professionals/${currentProfessionalId}`,
             type: 'PUT',
             contentType: 'application/json',
-            data: JSON.stringify(customerData),
+            data: JSON.stringify(professionalData),
             success: function (data) {
                 if (data.error) {
                     alert('Error: ' + data.error);
                 } else {
-                    alert('Customer updated successfully');
+                    alert('Service Professional updated successfully');
                     $('#form-modal-update')[0].reset();
                     $('#modal-update').modal('hide');
-                    loadDataTable(1);
+                    loadDataTable(1); // Reload table data if necessary
                 }
             },
             error: function (xhr, status, error) {
                 console.error('Error:', error);
-                alert('An error occurred while updating the customer.');
+                alert('An error occurred while updating the professional.');
             }
         });
     
