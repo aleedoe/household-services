@@ -78,6 +78,23 @@
 </div>
 
 
+<div class="modal fade" id="modal-delete" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteServiceLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="deleteServiceLabel">Delete Service</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete this service?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" onclick="submitFormDelete()">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <div class="app-content"> <!--begin::Container-->
@@ -157,7 +174,7 @@
                 <td>$${service.base_price}</td>
                 <td>${hours} hour ${minutes} minutes</td>
                 <td class="d-flex flex-row gap-2">
-                  <button type="button" class="btn btn-danger btn-sm float-end">
+                  <button type="button" class="btn btn-danger btn-sm float-end" onclick="openDeleteModal(${service.id})">
                     <i class="bi bi-trash"></i>
                   </button>
                   <button type="button" class="btn btn-primary btn-sm float-end" onclick="openUpdateModal(${service.id})">
@@ -171,7 +188,6 @@
     
     function openUpdateModal(serviceId) {
         currentServiceId = serviceId;
-        // Ambil data service dari server dan isi form di modal
         $.ajax({
             url: `/api/services/${serviceId}`,
             type: 'GET',
@@ -179,12 +195,10 @@
                 if (data.error) {
                     alert('Error: ' + data.error);
                 } else {
-                    // Isi form dengan data layanan
                     $('#service_name_update').val(data.name);
                     $('#service_description_update').val(data.description || '');
                     $('#base_price_update').val(data.base_price);
                     $('#time_required_update').val(data.time_required);
-                    // Tampilkan modal update
                     $('#modal-update').modal('show');
                 }
             },
@@ -194,7 +208,12 @@
             }
         });
     }
-    
+
+    function openDeleteModal(serviceId) {
+      currentDeleteServiceId = serviceId;
+      $('#modal-delete').modal('show');
+    }
+
       
       function createPaggination(totalPages, currentPage, totalData) {
         const paginationContainer = $('#main-pagination ul');
@@ -294,6 +313,7 @@
                       alert('Service created successfully');
                       $('#form-modal-add')[0].reset();
                       $('#modal-add').modal('hide');
+                      loadDataTable(1);
                   }
               },
               error: function (xhr, status, error) {
@@ -340,8 +360,7 @@
                       alert('Service updated successfully');
                       $('#form-modal-update')[0].reset();
                       $('#modal-update').modal('hide');
-                      // Reload the table or update the table row with new data
-                      loadServices(); // Fungsi ini harus didefinisikan untuk memuat ulang data layanan.
+                      loadDataTable(1);
                   }
               },
               error: function (xhr, status, error) {
@@ -353,14 +372,29 @@
           return false;
       }
       
-      
-      
-      function editService(serviceId) {
-        console.log('Editing service with ID:', serviceId);
-      }
+      function submitFormDelete() {
+          if (!currentDeleteServiceId) {
+              alert('No service selected for deletion.');
+              return;
+          }
 
-      function deleteService(serviceId) {
-        console.log('Deleting service with ID:', serviceId);
+          $.ajax({
+              url: `/api/services/${currentDeleteServiceId}`,
+              type: 'DELETE',
+              success: function (data) {
+                  if (data.error) {
+                      alert('Error: ' + data.error);
+                  } else {
+                      alert('Service deleted successfully');
+                      $('#modal-delete').modal('hide');
+                      loadDataTable(1);
+                  }
+              },
+              error: function (xhr, status, error) {
+                  console.error('Error:', error);
+                  alert('An error occurred while deleting the service.');
+              }
+          });
       }
 
       $('#search-user').on('submit', function (event) {
