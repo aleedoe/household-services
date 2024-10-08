@@ -27,6 +27,53 @@ def controller_get_admins():
         print(f'Error fetching admins: {error}')
         return jsonify(error="Internal server error"), 500
 
+def controller_search_admins():
+    try:
+        # Mendapatkan halaman dan keyword dari request
+        page = int(request.json.get('page', 1))
+        limit = 5
+        offset = (page - 1) * limit
+
+        search_keyword = request.json.get('keyword', '')
+
+        # Jika ada keyword, filter berdasarkan username atau email
+        if search_keyword:
+            admins_query = Admin.query.filter(
+                (Admin.username.ilike(f'%{search_keyword}%')) | 
+                (Admin.email.ilike(f'%{search_keyword}%'))
+            )
+        else:
+            admins_query = Admin.query
+
+        # Menghitung total data dan total halaman
+        total_data = admins_query.count()
+        total_pages = math.ceil(total_data / limit)
+
+        # Mengambil data admin dengan paginasi
+        admins_result = admins_query.offset(offset).limit(limit).all()
+
+        # Membuat list hasil pencarian
+        admins_list = [{
+            "id": admin.id,
+            "username": admin.username,
+            "email": admin.email
+        } for admin in admins_result]
+
+        # Response JSON yang akan dikembalikan
+        response = {
+            'data': admins_list,
+            'message': 'success',
+            'total_pages': total_pages,
+            'total_data': total_data
+        }
+
+        return make_response(jsonify(response)), 200
+
+    except Exception as error:
+        # Menangani error dan mengembalikan response error
+        print(f'Error searching admins: {error}')
+        return jsonify(error="Internal server error"), 500
+
 
 def controller_delete_admin(admin_id):
     try:

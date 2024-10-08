@@ -17,3 +17,8 @@ def manage_admin(admin_id):
         return controller_update_admin(admin_id)
     elif request.method == 'DELETE':
         return controller_delete_admin(admin_id)
+
+
+@apiBlueprint.route('/api/admins/search', methods=['POST'])
+def manage_search_admin():
+    return controller_search_admins()
