@@ -92,11 +92,11 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="deleteServiceLabel">Delete Service</h1>
+        <h1 class="modal-title fs-5" id="deleteServiceLabel">Delete Customer</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>Are you sure you want to delete this service?</p>
+        <p>Are you sure you want to delete this customer?</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -185,7 +185,7 @@
             <td>${customer.address}</td>
             <td>${new Date(customer.created_at).toLocaleDateString()}</td>
             <td class="d-flex flex-row gap-2">
-              <button type="button" class="btn btn-danger btn-sm float-end" onclick="openDeleteCustomerModal(${customer.id})">
+              <button type="button" class="btn btn-danger btn-sm float-end" onclick="openDeleteModal(${customer.id})">
                 <i class="bi bi-trash"></i>
               </button>
               <button type="button" class="btn btn-primary btn-sm float-end" onclick="openUpdateModal(${customer.id})">
@@ -221,8 +221,8 @@
       });
   }
 
-    function openDeleteModal(serviceId) {
-      currentDeleteServiceId = serviceId;
+    function openDeleteModal(customerID) {
+      currentDeleteServiceId = customerID;
       $('#modal-delete').modal('show');
     }
 
@@ -398,25 +398,25 @@
       
       function submitFormDelete() {
           if (!currentDeleteServiceId) {
-              alert('No service selected for deletion.');
+              alert('No customer selected for deletion.');
               return;
           }
 
           $.ajax({
-              url: `/api/services/${currentDeleteServiceId}`,
+              url: `/api/customers/${currentDeleteServiceId}`,
               type: 'DELETE',
               success: function (data) {
                   if (data.error) {
                       alert('Error: ' + data.error);
                   } else {
-                      alert('Service deleted successfully');
+                      alert('Customer deleted successfully');
                       $('#modal-delete').modal('hide');
                       loadDataTable(1);
                   }
               },
               error: function (xhr, status, error) {
                   console.error('Error:', error);
-                  alert('An error occurred while deleting the service.');
+                  alert('An error occurred while deleting the customer.');
               }
           });
       }
