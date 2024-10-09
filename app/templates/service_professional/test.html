@@ -1,0 +1,99 @@
+{% extends '/service_professional/layout.html' %}
+
+{% block title %}Test Page{% endblock %}
+
+{% block content %}
+<div class="app-content"> <!--begin::Container-->
+    <div class="container-fluid"> <!-- Timelime example  -->
+        <div class="row">
+            <div class="col-12"> <!-- The icons -->
+                <div class="col-12">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header">
+                          <div class="d-flex justify-content-between w-100">
+                            <div class="input-group w-25 input-group-sm">
+                              <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="button-addon2">
+                              <button class="btn btn-primary" type="button" id="button-addon2">Button</button>
+                            </div>
+                            <button type="button" class="btn btn-primary btn-sm float-end">Add</button>
+                          </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 10px">#</th>
+                                            <th>Task</th>
+                                            <th>Progress</th>
+                                            <th style="width: 40px">Label</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="align-middle">
+                                            <td>1.</td>
+                                            <td>Update software</td>
+                                            <td>
+                                                <div class="progress progress-xs">
+                                                    <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
+                                                </div>
+                                            </td>
+                                            <td><span class="badge text-bg-danger">55%</span></td>
+                                        </tr>
+                                        <tr class="align-middle">
+                                            <td>2.</td>
+                                            <td>Clean database</td>
+                                            <td>
+                                                <div class="progress progress-xs">
+                                                    <div class="progress-bar text-bg-warning" style="width: 70%"></div>
+                                                </div>
+                                            </td>
+                                            <td> <span class="badge text-bg-warning">70%</span> </td>
+                                        </tr>
+                                        <tr class="align-middle">
+                                            <td>3.</td>
+                                            <td>Cron job running</td>
+                                            <td>
+                                                <div class="progress progress-xs progress-striped active">
+                                                    <div class="progress-bar text-bg-primary" style="width: 30%"></div>
+                                                </div>
+                                            </td>
+                                            <td> <span class="badge text-bg-primary">30%</span> </td>
+                                        </tr>
+                                        <tr class="align-middle">
+                                            <td>4.</td>
+                                            <td>Fix and squish bugs</td>
+                                            <td>
+                                                <div class="progress progress-xs progress-striped active">
+                                                    <div class="progress-bar text-bg-success" style="width: 90%"></div>
+                                                </div>
+                                            </td>
+                                            <td> <span class="badge text-bg-success">90%</span> </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div> <!-- /.card-body -->
+                            <div class="card-footer clearfix">
+                                <nav aria-label="...">
+                                    <ul class="pagination pagination-sm m-0 float-end">
+                                      <li class="page-item disabled">
+                                        <a class="page-link">Previous</a>
+                                      </li>
+                                      <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                      <li class="page-item active" aria-current="page">
+                                        <a class="page-link" href="#">2</a>
+                                      </li>
+                                      <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                      <li class="page-item">
+                                        <a class="page-link" href="#">Next</a>
+                                      </li>
+                                    </ul>
+                                  </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- /.col -->
+        </div> <!-- /.row -->
+    </div> <!--end::Container-->
+{% endblock %}
