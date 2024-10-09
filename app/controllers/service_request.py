@@ -24,9 +24,9 @@ def controller_get_service_requests_sp():
             "remarks": service_request.remarks,
             "location": service_request.location,
             "total_price": service_request.total_price,
-            "customer_name": service_request.customer.name,
+            "customer_name": service_request.customer.username,
             "service_name": service_request.service.name,
-            "professional_name": service_request.professional.name if service_request.professional else None
+            "professional_name": service_request.professional.username if service_request.professional else None
         } for service_request in service_requests_query]
 
         # Membuat response JSON

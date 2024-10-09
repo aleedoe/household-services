@@ -19,86 +19,19 @@
                         </div>
                         <div class="card-body">
                             <div class="card-body">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
+                                <table class="table table-bordered table-striped" id="table-data">
+                                  <thead>
+                                      <tr>
                                           <th style="width: 30px">No</th>
                                           <th>Name</th>
                                           <th>Location</th>
+                                          <th>Date of Request</th>
                                           <th style="width: 40px" class="text-center">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr class="align-middle">
-                                            <td>1.</td>
-                                            <td>Update software</td>
-                                            <td>
-                                                <div class="progress progress-xs">
-                                                    <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
-                                                </div>
-                                            </td>
-                                            <td class="d-flex flex-row gap-2">
-                                                <button type="button" class="btn btn-danger btn-sm float-end" onclick="openDeleteModal(${admin.id})">
-                                                <i class="bi bi-x-square"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-success btn-sm float-end" onclick="openUpdateModal(${admin.id})">
-                                                <i class="bi bi-check2-square"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr class="align-middle">
-                                            <td>2.</td>
-                                            <td>Clean database</td>
-                                            <td>
-                                                <div class="progress progress-xs">
-                                                    <div class="progress-bar text-bg-warning" style="width: 70%"></div>
-                                                </div>
-                                            </td>
-                                            <td class="d-flex flex-row gap-2">
-                                                <button type="button" class="btn btn-danger btn-sm float-end" onclick="openDeleteModal(${admin.id})">
-                                                <i class="bi bi-x-square"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-success btn-sm float-end" onclick="openUpdateModal(${admin.id})">
-                                                <i class="bi bi-check2-square"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr class="align-middle">
-                                            <td>3.</td>
-                                            <td>Cron job running</td>
-                                            <td>
-                                                <div class="progress progress-xs progress-striped active">
-                                                    <div class="progress-bar text-bg-primary" style="width: 30%"></div>
-                                                </div>
-                                            </td>
-                                            <td class="d-flex flex-row gap-2">
-                                                <button type="button" class="btn btn-danger btn-sm float-end" onclick="openDeleteModal(${admin.id})">
-                                                <i class="bi bi-x-square"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-success btn-sm float-end" onclick="openUpdateModal(${admin.id})">
-                                                <i class="bi bi-check2-square"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr class="align-middle">
-                                            <td>4.</td>
-                                            <td>Fix and squish bugs</td>
-                                            <td>
-                                                <div class="progress progress-xs progress-striped active">
-                                                    <div class="progress-bar text-bg-success" style="width: 90%"></div>
-                                                </div>
-                                            </td>
-                                            <td class="d-flex flex-row gap-2">
-                                                <button type="button" class="btn btn-danger btn-sm float-end" onclick="openDeleteModal(${admin.id})">
-                                                <i class="bi bi-x-square"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-success btn-sm float-end" onclick="openUpdateModal(${admin.id})">
-                                                <i class="bi bi-check2-square"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                  </tbody>
+                              </table>
                             </div> <!-- /.card-body -->
                             <div class="card-footer clearfix">
                                 <nav aria-label="...">
@@ -123,4 +56,128 @@
             </div> <!-- /.col -->
         </div> <!-- /.row -->
     </div> <!--end::Container-->
+    <script>
+
+
+      function createTable(data, currentPage, perPage) {
+        const tableBody = $('#table-data tbody');
+        tableBody.empty();
+    
+        const startIndex = (currentPage - 1) * perPage + 1;
+    
+        data.data.forEach((service_req, index) => {
+            const rowIndex = startIndex + index;
+    
+            const dateOfRequest = new Date(service_req.date_of_request).toLocaleDateString();
+            const completionDate = service_req.date_of_completion 
+                ? new Date(service_req.date_of_completion).toLocaleDateString() 
+                : 'N/A';
+    
+            tableBody.append(`
+                <tr class="align-middle">
+                  <td class="text-center">${rowIndex}</td>
+                  <td>${service_req.customer_name}</td>
+                  <td>${service_req.location}</td>
+                  <td>${dateOfRequest}</td>
+                  <td class="d-flex flex-row gap-2">
+                    <button type="button" class="btn btn-danger btn-sm float-end" onclick="openDeleteModal(${service_req.id})">
+                      <i class="bi bi-x-square"></i>
+                    </button>
+                    <button type="button" class="btn btn-success btn-sm float-end" onclick="openUpdateModal(${service_req.id})">
+                      <i class="bi bi-check2-square"></i>
+                    </button>
+                  </td>
+                </tr>
+            `);
+        });
+    }
+    
+      
+      
+
+      function createPaggination(totalPages, currentPage, totalData) {
+        const paginationContainer = $('#main-pagination ul');
+        paginationContainer.empty();
+      
+        const prevDisabled = currentPage === 1 ? 'disabled' : '';
+        const prevPage = currentPage > 1 ? currentPage - 1 : 1;
+        paginationContainer.append(`
+          <li class="page-item ${prevDisabled}">
+            <a class="page-link" href="#" onclick="loadDataTable(${prevPage})">Previous</a>
+          </li>
+        `);
+      
+        const firstPageActive = currentPage === 1 ? 'active' : '';
+        paginationContainer.append(`
+          <li class="page-item ${firstPageActive}">
+            <a class="page-link" href="#" onclick="loadDataTable(1)">1</a>
+          </li>
+        `);
+      
+        if (currentPage > 3) {
+          paginationContainer.append(`
+            <li class="page-item disabled">
+              <a class="page-link">...</a>
+            </li>
+          `);
+        }
+      
+        const startPage = Math.max(2, currentPage - 1);
+        const endPage = Math.min(totalPages - 1, currentPage + 1);
+      
+        for (let i = startPage; i <= endPage; i++) {
+          const activeClass = i === currentPage ? 'active' : '';
+          paginationContainer.append(`
+            <li class="page-item ${activeClass}">
+              <a class="page-link" href="#" onclick="loadDataTable(${i})">${i}</a>
+            </li>
+          `);
+        }
+      
+        if (currentPage < totalPages - 2) {
+          paginationContainer.append(`
+            <li class="page-item disabled">
+              <a class="page-link">...</a>
+            </li>
+          `);
+        }
+      
+        if (totalPages > 1) {
+          const lastPageActive = currentPage === totalPages ? 'active' : '';
+          paginationContainer.append(`
+            <li class="page-item ${lastPageActive}">
+              <a class="page-link" href="#" onclick="loadDataTable(${totalPages})">${totalPages}</a>
+            </li>
+          `);
+        }
+      
+        const nextDisabled = currentPage === totalPages ? 'disabled' : '';
+        const nextPage = currentPage < totalPages ? currentPage + 1 : totalPages;
+        paginationContainer.append(`
+          <li class="page-item ${nextDisabled}">
+            <a class="page-link" href="#" onclick="loadDataTable(${nextPage})">Next</a>
+          </li>
+        `);
+      }
+      
+      
+      function loadDataTable(page) {
+
+        const perPage = 5;
+        
+        $.ajax({
+          url: '/api/service-requests-sp?page=' + page,
+          method: 'GET',
+          dataType: 'json',
+          success: function (data) {
+            createTable(data, page, perPage);
+            createPaggination(data.total_pages, page, data.total_data);
+          },
+          error: function () {
+          }
+        })
+      };
+      
+      loadDataTable(1);
+    </script>
 {% endblock %}
