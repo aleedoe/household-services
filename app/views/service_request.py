@@ -5,6 +5,11 @@ from app.controllers.service_request import *
 def manage_service_requests_sp():
     if request.method == 'GET':
         return controller_get_service_requests_sp()
+
+@apiBlueprint.route('/api/service-assigned-sp', methods=['GET', 'POST'])
+def manage_service_assigned_sp():
+    if request.method == 'GET':
+        return controller_get_service_assigned_sp()
     # elif request.method == 'POST':
     #     return controller_create_service_request_sp()
 
