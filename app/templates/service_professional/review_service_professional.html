@@ -1,0 +1,206 @@
+{% extends '/service_professional/layout.html' %}
+
+{% block title %}Review service professional Page{% endblock %}
+
+{% block content %}
+
+<style>
+  .custom-card-content {
+    line-height: 1.5 !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    white-space: pre-wrap !important;
+    word-break: keep-all !important;
+    text-overflow: ellipsis !important;
+    overflow: hidden !important;
+    margin-bottom: 4px !important;
+    min-height: 16px !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 3 !important;
+    -webkit-box-orient: vertical !important;
+}
+</style>
+
+<div class="app-content"> <!--begin::Container-->
+    <div class="container-fluid"> <!-- Timelime example  -->
+        <div class="row">
+            <div class="col-12"> <!-- The icons -->
+                <div class="col-12">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header">
+                          <div class="d-flex justify-content-between w-100">
+                            <div class="input-group w-25 input-group-sm">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-body">
+                              <div class="row row-gap-4">
+                                <div class="col-lg-3 col-6">
+                                  <div class="card">
+                                    <div class="card-body">
+                                      <div class="d-flex flex-column" style="height: 100px;">
+                                        <h5 class="card-title mb-1">Card title</h5>
+                                        <p class="card-text custom-card-content">Some quick example Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quae voluptatum nobis laboriosam quas. Sed similique totam dolor cupiditate reiciendis nihil porro dicta qui consectetur temporibus ipsam eum excepturi laboriosam fuga distinctio unde natus laudantium, consequatur facilis? Magnam iure nobis necessitatibus modi nesciunt impedit minus, doloribus, odio autem fugiat, perspiciatis maiores. Culpa tempora excepturi optio animi, unde laboriosam labore a accusamus distinctio modi ab nemo accusantium maiores minus incidunt ratione nisi ad voluptate quisquam sapiente quod, corporis nobis. Alias illum vitae commodi praesentium tempore est minima sint aliquam autem hic! Enim, neque exercitationem. Ea, sed modi reiciendis architecto officiis laboriosam qui.</p>
+                                      </div>
+                                      <div class="d-flex flex-row justify-content-between mt-2">
+                                        <a href="#" class="card-link">Detail</a>
+                                        <div>                                          
+                                          <i class="bi bi-star-fill"></i>
+                                          <i class="bi bi-star-fill"></i>
+                                          <i class="bi bi-star"></i>
+                                          <i class="bi bi-star"></i>
+                                          <i class="bi bi-star"></i>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div> <!-- /.card-body -->
+                            <div class="card-footer clearfix">
+                              <nav aria-label="..." id="main-pagination">
+                                <ul class="pagination pagination-sm m-0 float-end">
+                                  <li class="page-item disabled">
+                                    <a class="page-link">Previous</a>
+                                  </li>
+                                  <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                  <li class="page-item active" aria-current="page">
+                                    <a class="page-link" href="#">2</a>
+                                  </li>
+                                  <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                  <li class="page-item">
+                                    <a class="page-link" href="#">Next</a>
+                                  </li>
+                                </ul>
+                              </nav>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- /.col -->
+        </div> <!-- /.row -->
+    </div> <!--end::Container-->
+    <script>
+
+
+      function createTable(data, currentPage, perPage) {
+        const tableBody = $('#table-data tbody');
+        tableBody.empty();
+    
+        const startIndex = (currentPage - 1) * perPage + 1;
+    
+        data.data.forEach((service_req, index) => {
+            const rowIndex = startIndex + index;
+    
+            const dateOfRequest = new Date(service_req.date_of_request).toLocaleDateString();
+            const completionDate = service_req.date_of_completion 
+                ? new Date(service_req.date_of_completion).toLocaleDateString() 
+                : 'N/A';
+    
+            tableBody.append(`
+                <tr class="align-middle">
+                  <td class="text-center">${rowIndex}</td>
+                  <td>${service_req.customer_name}</td>
+                  <td>${service_req.location}</td>
+                  <td>${dateOfRequest}</td>
+                  <td class="d-flex flex-row gap-2">
+                    <button type="button" class="btn btn-success btn-sm float-end" onclick="openAssignModal(${service_req.id})">
+                      Completed
+                    </button>
+                  </td>
+                </tr>
+            `);
+        });
+    }
+    
+      
+      
+
+      function createPaggination(totalPages, currentPage, totalData) {
+        const paginationContainer = $('#main-pagination ul');
+        paginationContainer.empty();
+      
+        const prevDisabled = currentPage === 1 ? 'disabled' : '';
+        const prevPage = currentPage > 1 ? currentPage - 1 : 1;
+        paginationContainer.append(`
+          <li class="page-item ${prevDisabled}">
+            <a class="page-link" href="#" onclick="loadDataTable(${prevPage})">Previous</a>
+          </li>
+        `);
+      
+        const firstPageActive = currentPage === 1 ? 'active' : '';
+        paginationContainer.append(`
+          <li class="page-item ${firstPageActive}">
+            <a class="page-link" href="#" onclick="loadDataTable(1)">1</a>
+          </li>
+        `);
+      
+        if (currentPage > 3) {
+          paginationContainer.append(`
+            <li class="page-item disabled">
+              <a class="page-link">...</a>
+            </li>
+          `);
+        }
+      
+        const startPage = Math.max(2, currentPage - 1);
+        const endPage = Math.min(totalPages - 1, currentPage + 1);
+      
+        for (let i = startPage; i <= endPage; i++) {
+          const activeClass = i === currentPage ? 'active' : '';
+          paginationContainer.append(`
+            <li class="page-item ${activeClass}">
+              <a class="page-link" href="#" onclick="loadDataTable(${i})">${i}</a>
+            </li>
+          `);
+        }
+      
+        if (currentPage < totalPages - 2) {
+          paginationContainer.append(`
+            <li class="page-item disabled">
+              <a class="page-link">...</a>
+            </li>
+          `);
+        }
+      
+        if (totalPages > 1) {
+          const lastPageActive = currentPage === totalPages ? 'active' : '';
+          paginationContainer.append(`
+            <li class="page-item ${lastPageActive}">
+              <a class="page-link" href="#" onclick="loadDataTable(${totalPages})">${totalPages}</a>
+            </li>
+          `);
+        }
+      
+        const nextDisabled = currentPage === totalPages ? 'disabled' : '';
+        const nextPage = currentPage < totalPages ? currentPage + 1 : totalPages;
+        paginationContainer.append(`
+          <li class="page-item ${nextDisabled}">
+            <a class="page-link" href="#" onclick="loadDataTable(${nextPage})">Next</a>
+          </li>
+        `);
+      }
+
+      
+      
+      function loadDataTable(page) {
+
+        const perPage = 5;
+        
+        $.ajax({
+          url: '/api/service-assigned-sp?page=' + page,
+          method: 'GET',
+          dataType: 'json',
+          success: function (data) {
+            createTable(data, page, perPage);
+            createPaggination(data.total_pages, page, data.total_data);
+          },
+          error: function () {
+          }
+        })
+      };
+      
+      loadDataTable(1);
+    </script>
+{% endblock %}

@@ -11,3 +11,7 @@ def service_professional_request():
 @pageBlueprint.route('/service-professionals/service-assigned/')
 def service_professional_assigned():
     return render_template('service_professional/ass_service_professional.html')
+
+@pageBlueprint.route('/service-professionals/service-review/')
+def service_professional_review():
+    return render_template('service_professional/review_service_professional.html')
