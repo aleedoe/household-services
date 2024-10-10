@@ -273,7 +273,7 @@
         const perPage = 5;
         
         $.ajax({
-          url: '/api/service-requests-sp?page=' + page,
+          url: '/api/service-assigned-sp?page=' + page,
           method: 'GET',
           dataType: 'json',
           success: function (data) {
