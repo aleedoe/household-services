@@ -106,18 +106,22 @@
           <nav class="mt-2">
             <!-- begin::Sidebar Menu -->
             <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
-              <li class="nav-header">REQUEST</li>
               <li class="nav-item">
                 <a href="{{ url_for('pages.service_professional_request') }}" class="nav-link {% if request.path == '/service-professionals/service-request/' %}active{% endif %}" class="nav-link active">
                   <i class="nav-icon bi bi-palette"></i>
-                  <p>Services</p>
+                  <p>Services Request</p>
                 </a>
               </li>
-              <li class="nav-header">ASSIGNED</li>
               <li class="nav-item">
                 <a href="{{ url_for('pages.service_professional_assigned') }}" class="nav-link {% if request.path == '/service-professionals/service-assigned/' %}active{% endif %}" class="nav-link active">
                   <i class="nav-icon bi bi-palette"></i>
-                  <p>Services</p>
+                  <p>Services Assigned</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url_for('pages.service_professional_assigned') }}" class="nav-link {% if request.path == '/service-professionals/service-assigned/' %}active{% endif %}" class="nav-link active">
+                  <i class="nav-icon bi bi-palette"></i>
+                  <p>Customer Review</p>
                 </a>
               </li>
             </ul> <!-- end::Sidebar Menu -->
