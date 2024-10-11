@@ -89,3 +89,38 @@ def controller_get_reviews_sp(professional_id):
     except Exception as error:
         print(f'Error fetching reviews: {error}')
         return jsonify(error="Internal server error"), 500
+
+
+def controller_get_reviews_sp_by_service_request_id(service_request_id):
+    try:
+        # Query untuk mengambil review berdasarkan service_request_id
+        review = Review.query.filter_by(service_request_id=service_request_id).first()
+
+        # Jika review tidak ditemukan, kembalikan pesan error
+        if not review:
+            return jsonify(error="Review not found"), 404
+
+        # Membentuk dictionary dari hasil query dengan informasi review
+        review_data = {
+            "id": review.id,
+            "service_request_id": review.service_request_id,
+            "customer_id": review.customer_id,
+            "customer_username": review.customer.username,  # Nama customer
+            "professional_id": review.professional_id,
+            "professional_username": review.professional.username,  # Nama profesional
+            "rating": review.rating,
+            "comments": review.comments,
+            "created_at": review.created_at
+        }
+
+        # Membentuk response dalam bentuk JSON
+        response = {
+            'data': review_data,
+            'message': 'success'
+        }
+
+        return make_response(jsonify(response)), 200
+
+    except Exception as error:
+        print(f'Error fetching review by service request: {error}')
+        return jsonify(error="Internal server error"), 500
