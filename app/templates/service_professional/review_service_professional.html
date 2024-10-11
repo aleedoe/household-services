@@ -35,13 +35,13 @@
                         </div>
                         <div class="card-body">
                             <div class="card-body">
-                              <div class="row row-gap-4">
+                              <div class="row row-gap-4" id="card-review">
                                 <div class="col-lg-3 col-6">
                                   <div class="card">
                                     <div class="card-body">
                                       <div class="d-flex flex-column" style="height: 100px;">
                                         <h5 class="card-title mb-1">Card title</h5>
-                                        <p class="card-text custom-card-content">Some quick example Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quae voluptatum nobis laboriosam quas. Sed similique totam dolor cupiditate reiciendis nihil porro dicta qui consectetur temporibus ipsam eum excepturi laboriosam fuga distinctio unde natus laudantium, consequatur facilis? Magnam iure nobis necessitatibus modi nesciunt impedit minus, doloribus, odio autem fugiat, perspiciatis maiores. Culpa tempora excepturi optio animi, unde laboriosam labore a accusamus distinctio modi ab nemo accusantium maiores minus incidunt ratione nisi ad voluptate quisquam sapiente quod, corporis nobis. Alias illum vitae commodi praesentium tempore est minima sint aliquam autem hic! Enim, neque exercitationem. Ea, sed modi reiciendis architecto officiis laboriosam qui.</p>
+                                        <p class="card-text custom-card-content">Some quick example Lorem ipsum</p>
                                       </div>
                                       <div class="d-flex flex-row justify-content-between mt-2">
                                         <a href="#" class="card-link">Detail</a>
@@ -84,33 +84,43 @@
     <script>
 
 
+      function generateStars(rating) {
+        let stars = '';
+        for (let i = 1; i <= 5; i++) {
+            if (i <= rating) {
+                stars += '<i class="bi bi-star-fill"></i>';
+            } else {
+                stars += '<i class="bi bi-star"></i>';
+            }
+        }
+        return stars;
+    }
+
       function createTable(data, currentPage, perPage) {
-        const tableBody = $('#table-data tbody');
-        tableBody.empty();
+        const mainReview = $('#card-review');
+        mainReview.empty();  // Clear the previous reviews
     
-        const startIndex = (currentPage - 1) * perPage + 1;
-    
-        data.data.forEach((service_req, index) => {
-            const rowIndex = startIndex + index;
-    
-            const dateOfRequest = new Date(service_req.date_of_request).toLocaleDateString();
-            const completionDate = service_req.date_of_completion 
-                ? new Date(service_req.date_of_completion).toLocaleDateString() 
-                : 'N/A';
-    
-            tableBody.append(`
-                <tr class="align-middle">
-                  <td class="text-center">${rowIndex}</td>
-                  <td>${service_req.customer_name}</td>
-                  <td>${service_req.location}</td>
-                  <td>${dateOfRequest}</td>
-                  <td class="d-flex flex-row gap-2">
-                    <button type="button" class="btn btn-success btn-sm float-end" onclick="openAssignModal(${service_req.id})">
-                      Completed
-                    </button>
-                  </td>
-                </tr>
-            `);
+        data.forEach(review => {
+            // Create a card for each review
+            const reviewCard = `
+                  <div class="col-lg-3 col-6">
+                      <div class="card">
+                          <div class="card-body">
+                              <div class="d-flex flex-column" style="height: 100px;">
+                                  <h5 class="card-title mb-1">${review.customer_username}</h5>
+                                  <p class="card-text custom-card-content">${review.comments}</p>
+                              </div>
+                              <div class="d-flex flex-row justify-content-between mt-2">
+                                  <a href="#" class="card-link">Detail</a>
+                                  <div>
+                                      ${generateStars(review.rating)}
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+            `;
+            mainReview.append(reviewCard);
         });
     }
     
@@ -189,11 +199,11 @@
         const perPage = 5;
         
         $.ajax({
-          url: '/api/service-assigned-sp?page=' + page,
+          url: '/api/review-sp/1?page=' + page,
           method: 'GET',
           dataType: 'json',
           success: function (data) {
-            createTable(data, page, perPage);
+            createTable(data.data, page, perPage);
             createPaggination(data.total_pages, page, data.total_data);
           },
           error: function () {
