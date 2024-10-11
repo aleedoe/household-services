@@ -21,6 +21,41 @@
 }
 </style>
 
+
+
+<div class="modal fade" id="modal-review" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal-review" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+    <div class="modal-content shadow-lg border-0">
+      <div class="modal-header bg-light border-0">
+        <h1 class="modal-title fs-5 text-primary" id="modal-review">
+          <i class="bi bi-star-fill"></i> Review
+        </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <div class="card w-100" style="width: 18rem;">
+          <div class="card-body">
+            <div class="d-flex flex-column gap-2">
+              <h5 class="card-title" id="customer-username">
+              </h5>
+              <h6 class="card-subtitle mb-1 text-body-secondary" id="review-created-at"></h6>
+            </div>
+            <p class="card-text" id="review-comments"></p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer border-0">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
 <div class="app-content"> <!--begin::Container-->
     <div class="container-fluid"> <!-- Timelime example  -->
         <div class="row">
@@ -81,8 +116,38 @@
             </div> <!-- /.col -->
         </div> <!-- /.row -->
     </div> <!--end::Container-->
-    <script>
+  <script>
 
+
+    function openReviewModal(service_request_id) {
+      $.ajax({
+          url: `/api/review-sp/review/${service_request_id}`,
+          type: 'GET',
+          success: function (data) {
+            console.log(data);
+              if (data && data.data) {
+                  const review = data.data;
+                  // Mengisi data review ke dalam modal
+                  $('#customer-username').text(review.customer_username);
+                  $('#professional-username').text(review.professional_username);
+                  $('#review-rating').text(review.rating);
+                  $('#review-comments').text(review.comments);
+                  $('#review-created-at').text(new Date(review.created_at).toLocaleString());
+  
+                  // Menampilkan modal
+                  $('#modal-review').modal('show');
+              } else {
+                  alert('Review data not found.');
+              }
+          },
+          error: function (xhr, status, error) {
+              console.error('Error:', error);
+              alert('An error occurred while fetching the review data.');
+          }
+      });
+  }
+  
+  
 
       function generateStars(rating) {
         let stars = '';
@@ -111,7 +176,7 @@
                                   <p class="card-text custom-card-content">${review.comments}</p>
                               </div>
                               <div class="d-flex flex-row justify-content-between mt-2">
-                                  <a href="#" class="card-link">Detail</a>
+                                  <a href="#" onclick="openReviewModal(${review.service_request_id})" class="card-link">Detail</a>
                                   <div>
                                       ${generateStars(review.rating)}
                                   </div>
