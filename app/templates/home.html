@@ -1,0 +1,100 @@
+<!-- app/templates/test.html -->
+{% extends 'layout.html' %}
+
+{% block title %}
+  Home Page
+{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+  <!-- Services Activity Section -->
+  <div class="mb-4">
+      <h5>Services Activity</h5>
+      <div class="list-group">
+          <a href="#" class="list-group-item list-group-item-action">Service 1</a>
+          <a href="#" class="list-group-item list-group-item-action">Service 2</a>
+          <a href="#" class="list-group-item list-group-item-action">Service 3</a>
+          <a href="#" class="list-group-item list-group-item-action">Service 4</a>
+      </div>
+      <div class="text-center mt-3">
+          <a href="#" class="btn btn-secondary">View All</a>
+      </div>
+  </div>
+
+  <!-- Search and History Buttons -->
+  <div class="d-flex justify-content-center mb-4">
+      <button href="{{ url_for('pages.home') }}" class="btn btn-outline-secondary mx-2 {% if request.path == '/home' %}active{% endif %}">Search Services</button>
+      <button class="btn btn-outline-secondary mx-2">History Services</button>
+  </div>
+
+  <!-- Search Input -->
+  <div class="input-group mb-4">
+      <input type="text" class="form-control" placeholder="Cari service">
+      <button class="btn btn-outline-secondary" type="button">Search</button>
+  </div>
+
+  <!-- Service Cards Grid -->
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+      <div class="col">
+          <div class="card h-100">
+              <div class="card-body">
+                  <h5 class="card-title">Service 1</h5>
+                  <p class="card-text">Service description goes here.</p>
+              </div>
+          </div>
+      </div>
+      <div class="col">
+          <div class="card h-100">
+              <div class="card-body">
+                  <h5 class="card-title">Service 2</h5>
+                  <p class="card-text">Service description goes here.</p>
+              </div>
+          </div>
+      </div>
+      <div class="col">
+          <div class="card h-100">
+              <div class="card-body">
+                  <h5 class="card-title">Service 3</h5>
+                  <p class="card-text">Service description goes here.</p>
+              </div>
+          </div>
+      </div>
+      <div class="col">
+          <div class="card h-100">
+              <div class="card-body">
+                  <h5 class="card-title">Service 4</h5>
+                  <p class="card-text">Service description goes here.</p>
+              </div>
+          </div>
+      </div>
+      <div class="col">
+          <div class="card h-100">
+              <div class="card-body">
+                  <h5 class="card-title">Service 5</h5>
+                  <p class="card-text">Service description goes here.</p>
+              </div>
+          </div>
+      </div>
+      <div class="col">
+          <div class="card h-100">
+              <div class="card-body">
+                  <h5 class="card-title">Service 6</h5>
+                  <p class="card-text">Service description goes here.</p>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="d-flex justify-content-center mt-4">
+      <nav aria-label="Page navigation">
+          <ul class="pagination">
+              <li class="page-item"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item"><a class="page-link" href="#">4</a></li>
+          </ul>
+      </nav>
+  </div>
+</div>
+{% endblock %}

@@ -9,11 +9,20 @@
         Flask App
       {% endblock %}
     </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='plugins/source-sans-3-5.0.12/index.css') }}" />
+    <!-- end::Fonts -->
+    <!-- begin::Third Party Plugin(OverlayScrollbars) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='plugins/overlayscrollbars/overlayscrollbars.min.css') }}" />
+    <!-- end::Third Party Plugin(OverlayScrollbars) -->
+    <!-- begin::Third Party Plugin(Bootstrap Icons) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='plugins/bootstrap-icons-1.11.3/font/bootstrap-icons.min.css') }}" />
+    <!-- end::Third Party Plugin(Bootstrap Icons) -->
+    <!-- begin::Required Plugin(AdminLTE) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='adminlte-v4.0.0-beta2-with-dist/dist/css/adminlte.css') }}" />
+    <!-- end::Required Plugin(AdminLTE) -->
+    <script src="{{ url_for('static', filename='plugins/jquery/jquery-3.6.0.min.js') }}"></script>
   </head>
   <body>
-    <header>
-      <h1>Welcome to Flask App</h1>
-    </header>
     <main>
       {% block content %}
 
