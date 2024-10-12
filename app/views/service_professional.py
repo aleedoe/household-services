@@ -13,6 +13,11 @@ def manage_service_professionals():
     elif request.method == 'POST':
         return controller_create_service_professional()
 
+@apiBlueprint.route('/api/service-professionals-customer/<int:professional_id>', methods=['GET', 'PUT', 'DELETE'])
+def manage_service_professional_customer(professional_id):
+    if request.method == 'GET':
+        return controller_get_service_professional_by_id_customer(professional_id)
+
 @apiBlueprint.route('/api/service-professionals/<int:professional_id>', methods=['GET', 'PUT', 'DELETE'])
 def manage_service_professional(professional_id):
     if request.method == 'GET':

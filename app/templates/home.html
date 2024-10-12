@@ -6,6 +6,58 @@
 {% endblock %}
 
 {% block content %}
+
+<div class="modal fade" id="modal-professional" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal-professional" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content shadow-lg border-0">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="modal-professional">Service Professional</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <div class="row mb-3">
+          <div class="col">
+            <h6>Name: <span id="professional-username" class="fw-bold"></span></h6>
+            <h6>Service: <span id="professional-service" class="fw-bold"></span></h6>
+            <h6>Rating: <span id="professional-rating" class="fw-bold"></span></h6>
+          </div>
+          <div class="col text-end">
+            <h6>Verified: <span id="professional-verified" class="fw-bold"></span></h6>
+          </div>
+        </div>
+        <div class="mb-3">
+          <h6>Description:</h6>
+          <p id="professional-description"></p>
+        </div>
+        <div>
+          <h6>Reviews</h6>
+          <div id="reviews-container" class="border p-2 rounded">
+            <!-- Reviews will be dynamically added here -->
+          </div>
+        </div>
+        <div class="d-flex justify-content-center mt-4">
+          <nav aria-label="Pagination" id="main-pagination-detail">
+            <ul class="pagination pagination-sm m-0">
+              <li class="page-item disabled">
+                <a class="page-link" id="prev-page">Previous</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" id="next-page">Next</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <div class="modal-footer border-0">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
   <div class="container my-4">
     <!-- Services Activity Section -->
     <div class="mb-4">
@@ -78,6 +130,53 @@
   <script>
 
 
+    function openReviewModal(service_request_id) {
+      $.ajax({
+          url: `/api/service-professionals-customer/${service_request_id}`,
+          type: 'GET',
+          success: function (data) {
+            console.log(data.username);
+            $('#professional-username').text(data.username);
+            $('#professional-service').text(data.service);
+            $('#professional-rating').text(calculateAverageRating(data.reviews));
+            $('#professional-description').text(data.description);
+            $('#professional-verified').text(data.verified_status ? 'Yes' : 'No');
+    
+            // Clear previous reviews
+            $('#reviews-container').empty();
+    
+            // Add reviews to the modal
+            data.reviews.forEach(function(review) {
+              $('#reviews-container').append(`
+                <div class="row">
+                  <div class="col">
+                    <div class="row">Customer: ${review.customer_username}</div>
+                    <div class="row">Rating: ${review.rating}</div>
+                    <div class="row">Comment: ${review.comments}</div>
+                    <div class="row">Date: ${new Date(review.created_at).toLocaleDateString()}</div>
+                  </div>
+                </div>
+              `);
+            });
+    
+            $('#modal-professional').modal('show');
+          },
+          error: function (xhr, status, error) {
+              console.error('Error:', error);
+              alert('An error occurred while fetching the review data.');
+          }
+      });
+    }
+    
+    function calculateAverageRating(reviews) {
+      if (reviews.length === 0) return 'No ratings';
+      let sum = 0;
+      reviews.forEach(review => sum += review.rating);
+      return (sum / reviews.length).toFixed(1);
+    }
+    
+    
+
     function generateStars(rating) {
       let stars = '';
       for (let i = 1; i <= 5; i++) {
@@ -103,11 +202,11 @@ function createTable(data, currentPage, perPage) {
               <div class="card-body">
                 <div class="d-flex flex-column" style="height: 100px;">
                   <h5 class="card-title mb-1">${professional.username}</h5>
-                  <p class="card-subtitle">${professional.email}</p>
+                  <p class="card-subtitle">Service ${professional.service}</p>
                   <p class="card-text custom-card-content">${professional.description}</p>
                 </div>
                 <div class="d-flex flex-row justify-content-between mt-2">
-                  <a href="#" onclick="showDetails(${professional.id})" class="card-link">Detail</a>
+                  <a href="#" onclick="openReviewModal(${professional.id})" class="card-link">Detail</a>
                   <div>
                     ${generateStars(professional.experience || 0)}  <!-- Using experience for rating -->
                   </div>
