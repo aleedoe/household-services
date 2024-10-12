@@ -96,7 +96,7 @@ def add_service_request():
 def controller_get_service_requests_customer(customer_id):
     try:
         # Filter data berdasarkan status 'requested' dan customer_id
-        service_requests_query = ServiceRequest.query.filter_by(service_status='requested', customer_id=customer_id).all()
+        service_requests_query = ServiceRequest.query.filter_by(customer_id=customer_id).all()
 
         # Buat daftar hasil dalam format JSON-friendly
         service_requests_list = [{

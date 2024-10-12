@@ -101,7 +101,7 @@
     <!-- Services Activity Section -->
     <div class="mb-4">
       <h5>Services Activity</h5>
-      <div class="list-group">
+      <div class="list-group" id="list-activity">
         <div class="list-group-item list-group-item-action">Service 1</div>
         <div class="list-group-item list-group-item-action">Service 2</div>
         <div class="list-group-item list-group-item-action">Service 3</div>
@@ -161,6 +161,62 @@
   </div>
 
   <script>
+
+
+    const customerId = 123;
+
+    // Fungsi untuk memuat data service request
+    function loadServiceRequests() {
+      $.ajax({
+        url: `/api/service-requests-customer/1`,  // Ganti dengan URL API yang sesuai
+        type: 'GET',
+        dataType: 'json',
+        success: function (response) {
+          const serviceRequests = response.data;
+
+          // Clear existing list
+          $('#list-activity').empty();
+
+          if (serviceRequests.length > 0) {
+            // Iterasi data dan tambahkan item ke dalam list
+            serviceRequests.forEach(function (request) {
+              const listItem = `
+                <div class="list-group-item list-group-item-action">
+                  <strong>${request.professional_name || 'N/A'}</strong><br>
+                  Service: ${request.service_name}<br>
+                  Status: ${request.service_status}
+                </div>
+              `;
+              $('#list-activity').append(listItem);
+            });
+          } else {
+            $('#list-activity').append('<div class="list-group-item">No service requests found</div>');
+          }
+        },
+        error: function () {
+          $('#list-activity').html('<div class="list-group-item">Error fetching service requests.</div>');
+        }
+      });
+    }
+
+    // Panggil fungsi untuk memuat data saat halaman dimuat
+    loadServiceRequests();
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 
     function submitFormHire(event) {
