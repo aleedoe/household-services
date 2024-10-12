@@ -10,8 +10,8 @@ def manage_service_requests_sp():
 def manage_service_assigned_sp():
     if request.method == 'GET':
         return controller_get_service_assigned_sp()
-    # elif request.method == 'POST':
-    #     return controller_create_service_request_sp()
+    elif request.method == 'POST':
+        return add_service_request()
 
 @apiBlueprint.route('/api/service-requests-sp/<int:request_id>', methods=['GET', 'PUT', 'DELETE'])
 def manage_service_request_sp(request_id):

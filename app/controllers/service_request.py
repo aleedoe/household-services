@@ -44,6 +44,55 @@ def controller_get_service_requests():
         print(f'Error fetching service requests: {error}')
         return jsonify(error="Internal server error"), 500
 
+
+def add_service_request():
+    try:
+        # Mendapatkan data dari body request (format JSON)
+        data = request.get_json()
+
+        # Validasi data yang diterima
+        if not data.get('customer_id') or not data.get('service_id') or not data.get('location'):
+            return make_response(jsonify({"error": "Missing required fields"}), 400)
+
+        # Menyusun objek ServiceRequest baru
+        service_request = ServiceRequest(
+            customer_id=data['customer_id'],
+            service_id=data['service_id'],
+            professional_id=data.get('professional_id', None),
+            date_of_request=datetime.now(),
+            date_of_completion=None,  # Belum selesai pada saat dibuat
+            service_status='requested',
+            remarks=data.get('remarks', None),
+            location=data['location'],
+            total_price=data['total_price']
+        )
+
+        # Menambahkan data ke database
+        db.session.add(service_request)
+        db.session.commit()
+
+        # Mengembalikan response sukses dengan data permintaan yang baru ditambahkan
+        response = {
+            'message': 'Service request added successfully',
+            'data': {
+                'id': service_request.id,
+                'customer_id': service_request.customer_id,
+                'service_id': service_request.service_id,
+                'professional_id': service_request.professional_id,
+                'date_of_request': service_request.date_of_request,
+                'service_status': service_request.service_status,
+                'remarks': service_request.remarks,
+                'location': service_request.location,
+                'total_price': service_request.total_price
+            }
+        }
+
+        return make_response(jsonify(response)), 201  # 201 Created
+
+    except Exception as error:
+        print(f'Error adding service request: {error}')
+        return jsonify(error="Internal server error"), 500
+
 def controller_get_service_requests_sp():
     try:
         # Ambil halaman dan batas per halaman
@@ -136,7 +185,6 @@ def controller_get_service_assigned_sp():
         print(f'Error fetching service requests: {error}')
         return jsonify(error="Internal server error"), 500
 
-
 def controller_update_service_status(service_request_id):
     try:
         # Mengambil data dari request body (dalam format JSON)
@@ -167,3 +215,5 @@ def controller_update_service_status(service_request_id):
     except Exception as error:
         print(f'Error updating service status: {error}')
         return jsonify(error="Internal server error"), 500
+
+

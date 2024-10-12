@@ -53,7 +53,9 @@ def controller_get_service_professionals_customer():
             "description": professional.description,
             "experience": professional.experience,
             "verified_status": professional.verified_status,
+            "service_id": professional.service.id if professional.service else None,
             "service": professional.service.name if professional.service else None,
+            "service_price": professional.service.base_price if professional.service else None,
             "created_at": professional.created_at
         } for professional in professionals_query]
 
