@@ -1,6 +1,11 @@
 from app.views import apiBlueprint
 from app.controllers.service_request import *
 
+@apiBlueprint.route('/api/service-requests-customer/<int:customer_id>', methods=['GET', 'POST'])
+def manage_service_requests_customer(customer_id):
+    if request.method == 'GET':
+        return controller_get_service_requests_customer(customer_id)
+
 @apiBlueprint.route('/api/service-requests-sp', methods=['GET', 'POST'])
 def manage_service_requests_sp():
     if request.method == 'GET':
