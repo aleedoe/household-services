@@ -99,11 +99,6 @@ def controller_register_service_pro():
         if ServiceProfessional.query.filter((ServiceProfessional.username == username) | (ServiceProfessional.email == email)).first():
             return jsonify(error="Username or email already exists"), 400
 
-        # Periksa apakah service_id valid
-        service = Service.query.get(service_id)
-        if not service:
-            return jsonify(error="Invalid service ID"), 400
-
         # Buat service professional baru
         new_service_pro = ServiceProfessional(
             username=username,
