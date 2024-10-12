@@ -1,6 +1,11 @@
 from app.views import apiBlueprint
 from app.controllers.service_professional import *
 
+@apiBlueprint.route('/api/service-professionals-customer', methods=['GET', 'POST'])
+def manage_service_professionals_customer():
+    if request.method == 'GET':
+        return controller_get_service_professionals_customer()
+
 @apiBlueprint.route('/api/service-professionals', methods=['GET', 'POST'])
 def manage_service_professionals():
     if request.method == 'GET':

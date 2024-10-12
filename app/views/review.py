@@ -5,6 +5,11 @@ from app.controllers.review import *
 def manage_review_sp(professional_id):
     if request.method == 'GET':
         return controller_get_reviews_sp(professional_id)
+
+@apiBlueprint.route('/api/reviews-all/', methods=['GET', 'POST'])
+def manage_reviews_all():
+    if request.method == 'GET':
+        return controller_get_reviews_admin()
 #     elif request.method == 'POST':
 #         return controller_create_customer()
 
