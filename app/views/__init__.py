@@ -8,6 +8,7 @@ from app.views.service import *
 from app.views.service_professional import *
 from app.views.service_request import *
 from app.views.review import *
+from app.views.auth import *
 
 
 def register_blueprint_views(app):
