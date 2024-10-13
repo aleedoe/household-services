@@ -59,7 +59,7 @@ def login_customer():
     if session.get('is_logged_in'):
         return redirect(url_for('pages.home'))
 
-    return render_template('login_customer.html')
+    return render_template('login.html')
 
 
 @pageBlueprint.route('/register-customer', methods=['GET', 'POST'])
@@ -88,7 +88,7 @@ def register_customer():
 
         flash('Error registering customer. Please try again.', 'error')
 
-    return render_template('register_customer.html')
+    return render_template('register.html')
 
 
 @pageBlueprint.route('/login-service_pro', methods=['GET', 'POST'])
