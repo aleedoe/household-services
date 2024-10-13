@@ -68,7 +68,7 @@
           </div>
           <div class="modal-body">
               <form id="serviceRequestForm" onsubmit="submitFormHire(event)">
-                <input type="hidden" class="form-control" id="customer_id" required>
+                <input type="hidden" class="form-control" id="customer_id" value="{{ session.id_user }}">
                 <input type="hidden" class="form-control" id="service_id" required>
                 <input type="hidden" class="form-control" id="professional_id">
                   <div class="mb-3">
@@ -168,7 +168,7 @@
     // Fungsi untuk memuat data service request
     function loadServiceRequests() {
       $.ajax({
-        url: `/api/service-requests-customer/1`,  // Ganti dengan URL API yang sesuai
+        url: `/api/service-requests-customer/{{ session.id_user }}`,  // Ganti dengan URL API yang sesuai
         type: 'GET',
         dataType: 'json',
         success: function (response) {
@@ -253,6 +253,8 @@
             $('#serviceRequestModal').modal('hide');
             // Reset the form
             $('#serviceRequestForm')[0].reset();
+            loadServiceRequests();
+            
         },
         error: function (error) {
             $('#responseMessage').html('<div class="alert alert-danger">Error: ' + error.responseJSON.error + '</div>');
@@ -262,7 +264,6 @@
 
 
     function opemModalAddHire() {
-      $('#customer_id').val(1);
       $('#service_id').val($('#professional-service-id').val());
       $('#professional_id').val($('#professional-id').val());
       $('#serviceRequestModal').modal('show');
