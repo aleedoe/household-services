@@ -20,3 +20,7 @@ def admin_service_professionals():
 @pageBlueprint.route('/admin/admins')
 def admin_service_admins():
     return render_template('admin/admins.html')
+
+@pageBlueprint.route('/admin/req-services')
+def admin_req_service_admins():
+    return render_template('admin/req_services.html')
