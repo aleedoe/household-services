@@ -213,15 +213,15 @@
           }
       
           $.ajax({
-              url: `/api/service-requests-sp/${currentSRRejectId}`,
+              url: `/api/verified-service-professionals/${currentSRRejectId}`,
               type: 'DELETE',
               contentType: 'application/json',
-              data: JSON.stringify({ service_status: 'rejected' }),
+              data: JSON.stringify({ verified_status: 'false' }),
               success: function (data) {
                   if (data.error) {
                       alert('Error: ' + data.error);
                   } else {
-                      alert('Service request rejected successfully');
+                      alert('Service professional rejected successfully');
                       $('#modal-reject').modal('hide');
                       loadDataTable(1);  // Reload data table
                   }
@@ -247,15 +247,15 @@
         }
     
         $.ajax({
-            url: `/api/service-requests-sp/${currentSRAssignId}`,
+            url: `/api/verified-service-professionals/${currentSRAssignId}`,
             type: 'PUT',
             contentType: 'application/json',
-            data: JSON.stringify({ service_status: 'assigned' }),
+            data: JSON.stringify({ verified_status: 'true' }),
             success: function (data) {
                 if (data.error) {
                     alert('Error: ' + data.error);
                 } else {
-                    alert('Service request assigned successfully');
+                    alert('Service professional assigned successfully');
                     $('#modal-assign').modal('hide');
                     loadDataTable(1);  // Reload data table
                 }

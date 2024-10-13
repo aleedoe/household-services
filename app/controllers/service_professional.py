@@ -205,8 +205,6 @@ def controller_get_service_professional_by_id_customer(professional_id):
         return jsonify(error="Internal server error"), 500
 
 
-
-
 def controller_create_service_professional():
     try:
         data = request.get_json()
@@ -322,3 +320,43 @@ def controller_search_service_professionals():
     except Exception as error:
         print(f'Error searching service professionals: {error}')
         return jsonify(error="Internal server error"), 500
+
+
+def assign_verified_status(professional_id, status):
+    try:
+        professional = ServiceProfessional.query.get_or_404(professional_id)
+        
+        if status == 'true':
+            professional.verified_status = True
+        elif status == 'false':
+            professional.verified_status = False
+        else:
+            return {"error": "Invalid verified status value"}, 400
+
+        db.session.commit()
+
+        return {
+            "message": "Service professional status updated successfully",
+            "verified_status": professional.verified_status
+        }, 200
+
+    except Exception as error:
+        print(f"Error updating service professional: {error}")
+        return {"error": "Internal server error"}, 500
+
+
+def reject_verified_status(professional_id):
+    try:
+        professional = ServiceProfessional.query.get_or_404(professional_id)
+        
+        professional.verified_status = False
+        db.session.commit()
+
+        return {
+            "message": "Service professional verification rejected",
+            "verified_status": professional.verified_status
+        }, 200
+
+    except Exception as error:
+        print(f"Error rejecting service professional: {error}")
+        return {"error": "Internal server error"}, 500

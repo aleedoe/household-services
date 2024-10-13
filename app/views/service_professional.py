@@ -36,3 +36,24 @@ def manage_service_professional(professional_id):
 @apiBlueprint.route('/api/service-professionals/search', methods=['POST'])
 def manage_search_service_professionals():
     return controller_search_service_professionals()
+
+
+
+@apiBlueprint.route('/api/verified-service-professionals/<int:professional_id>', methods=['PUT'])
+def update_service_professional_assign(professional_id):
+    data = request.get_json()
+
+    if 'verified_status' not in data:
+        return jsonify({"error": "verified_status field is required"}), 400
+
+    status = data['verified_status']
+    response, status_code = assign_verified_status(professional_id, status)
+    
+    return jsonify(response), status_code
+
+
+@apiBlueprint.route('/api/verified-service-professionals/<int:professional_id>', methods=['DELETE'])
+def update_service_professional_reject(professional_id):
+    response, status_code = reject_verified_status(professional_id)
+    
+    return jsonify(response), status_code
