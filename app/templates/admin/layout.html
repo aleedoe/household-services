@@ -117,13 +117,13 @@
             <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
               <li class="nav-header">REQUEST</li>
               <li class="nav-item">
-                <a href="{{ url_for('pages.admin_req_service_admins') }}" class="nav-link {% if request.path == '/admin/req-services' %}active{% endif %}" class="nav-link active">
+                <a href="{{ url_for('pages.admin_req_service_admins') }}" class="nav-link {% if request.path == '/admin/req-services' %}active{% endif %}">
                   <i class="nav-icon bi bi-palette"></i>
                   <p>Services</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="./docs/introduction.html" class="nav-link">
+                <a href="{{ url_for('pages.admin_req_service_pro_admins') }}" class="nav-link {% if request.path == '/admin/req-services-pro' %}active{% endif %}"\>
                   <i class="nav-icon bi bi-download"></i>
                   <p>Service Professional</p>
                 </a>

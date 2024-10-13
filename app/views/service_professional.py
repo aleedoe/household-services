@@ -6,6 +6,12 @@ def manage_service_professionals_customer():
     if request.method == 'GET':
         return controller_get_service_professionals_customer()
 
+@apiBlueprint.route('/api/unverified-service-professionals', methods=['GET'])
+def get_unverified_service_professionals_admin():
+    return controller_get_unverified_service_professionals_admin()
+
+        
+
 @apiBlueprint.route('/api/service-professionals', methods=['GET', 'POST'])
 def manage_service_professionals():
     if request.method == 'GET':

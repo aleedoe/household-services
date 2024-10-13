@@ -72,7 +72,40 @@ def controller_get_service_professionals_customer():
         print(f'Error fetching service professionals: {error}')
         return jsonify(error="Internal server error"), 500
 
+def controller_get_unverified_service_professionals_admin():
+    try:
+        page = int(request.args.get('page', 1))
+        limit = 5
+        offset = (page - 1) * limit
 
+        # Hanya mengambil data dengan verified_status = 0 (False)
+        total_data = ServiceProfessional.query.filter_by(verified_status=False).count()
+        total_pages = math.ceil(total_data / limit)
+
+        professionals_query = ServiceProfessional.query.filter_by(verified_status=False).offset(offset).limit(limit).all()
+        professionals_list = [{
+            "id": professional.id,
+            "username": professional.username,
+            "email": professional.email,
+            "description": professional.description,
+            "experience": professional.experience,
+            "verified_status": professional.verified_status,
+            "service": professional.service.name if professional.service else None,
+            "created_at": professional.created_at
+        } for professional in professionals_query]
+
+        response = {
+            'data': professionals_list,
+            'message': 'success',
+            'total_pages': total_pages,
+            'total_data': total_data
+        }
+
+        return make_response(jsonify(response)), 200
+
+    except Exception as error:
+        print(f'Error fetching unverified service professionals: {error}')
+        return jsonify(error="Internal server error"), 500
 
 def controller_delete_service_professional(professional_id):
     try:

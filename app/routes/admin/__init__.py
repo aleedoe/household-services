@@ -44,3 +44,10 @@ def admin_req_service_admins():
         return render_template('admin/req_services.html')
     else:
         return redirect(url_for('pages.login_admin'))
+
+@pageBlueprint.route('/admin/req-services-pro')
+def admin_req_service_pro_admins():
+    if 'is_logged_in' in session:
+        return render_template('admin/req_service_pro.html')
+    else:
+        return redirect(url_for('pages.login_admin'))
