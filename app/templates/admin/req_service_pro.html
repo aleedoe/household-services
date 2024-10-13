@@ -59,19 +59,20 @@
                         </div>
                         <div class="card-body">
                             <div class="card-body">
-                                <table class="table table-bordered table-striped" id="table-data">
-                                  <thead>
-                                      <tr>
-                                          <th style="width: 30px">No</th>
-                                          <th>Name</th>
-                                          <th>Location</th>
-                                          <th>Date of Request</th>
-                                          <th style="width: 40px" class="text-center">Action</th>
-                                      </tr>
-                                  </thead>
-                                  <tbody>
-                                  </tbody>
-                              </table>
+                              <table class="table table-bordered table-striped" id="table-data">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 30px">No</th>
+                                        <th>Username</th>
+                                        <th>Email</th>
+                                        <th>Description</th>
+                                        <th>Experience</th>
+                                        <th style="width: 40px" class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
                             </div> <!-- /.card-body -->
                             <div class="card-footer clearfix">
                               <nav aria-label="..." id="main-pagination">
@@ -105,28 +106,25 @@
     
         const startIndex = (currentPage - 1) * perPage + 1;
     
-        data.data.forEach((service_req, index) => {
+        data.data.forEach((professional, index) => {
             const rowIndex = startIndex + index;
-    
-            const dateOfRequest = new Date(service_req.date_of_request).toLocaleDateString();
-            const completionDate = service_req.date_of_completion 
-                ? new Date(service_req.date_of_completion).toLocaleDateString() 
-                : 'N/A';
+            const createdAt = new Date(professional.created_at).toLocaleDateString();
     
             tableBody.append(`
                 <tr class="align-middle">
-                  <td class="text-center">${rowIndex}</td>
-                  <td>${service_req.customer_name}</td>
-                  <td>${service_req.location}</td>
-                  <td>${dateOfRequest}</td>
-                  <td class="d-flex flex-row gap-2">
-                    <button type="button" class="btn btn-danger btn-sm float-end" onclick="openRejectModal(${service_req.id})">
-                      <i class="bi bi-x-square"></i>
-                    </button>
-                    <button type="button" class="btn btn-success btn-sm float-end" onclick="openAssignModal(${service_req.id})">
-                      <i class="bi bi-check2-square"></i>
-                    </button>
-                  </td>
+                    <td class="text-center">${rowIndex}</td>
+                    <td>${professional.username}</td>
+                    <td>${professional.email}</td>
+                    <td>${professional.description}</td>
+                    <td>${professional.experience}</td>
+                    <td class="d-flex flex-row gap-2">
+                        <button type="button" class="btn btn-danger btn-sm float-end" onclick="openRejectModal(${professional.id})">
+                            <i class="bi bi-x-square"></i>
+                        </button>
+                        <button type="button" class="btn btn-success btn-sm float-end" onclick="openAssignModal(${professional.id})">
+                            <i class="bi bi-check2-square"></i>
+                        </button>
+                    </td>
                 </tr>
             `);
         });
@@ -276,7 +274,7 @@
         const perPage = 5;
         
         $.ajax({
-          url: '/api/service-requests-sp?page=' + page,
+          url: '/api/unverified-service-professionals?page=' + page,
           method: 'GET',
           dataType: 'json',
           success: function (data) {
