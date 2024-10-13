@@ -57,6 +57,23 @@
   </head> <!-- end::Head --> <!-- begin::Body -->
 
   <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+    <div class="modal fade" id="modal-logout" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">Logout</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>Apakah Anda yakin ingin keluar?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+            <a type="button" class="btn btn-danger" href="{{ url_for('pages.logout_admin') }}">Keluar</a>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- begin::App Wrapper -->
     <div class="app-wrapper">
       <!-- begin::Header -->
@@ -71,32 +88,18 @@
           </ul> <!-- end::Start Navbar Links --> <!-- begin::End Navbar Links -->
           <ul class="navbar-nav ms-auto">
             <li class="nav-item dropdown user-menu">
-              <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><img src="{{ url_for('static', filename='adminlte-v4.0.0-beta2-with-dist/dist/assets/img/user2-160x160.jpg') }}" class="user-image rounded-circle shadow" alt="User Image" /> <span class="d-none d-md-inline">Alexander Pierce</span></a>
+              <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><img src="{{ url_for('static', filename='adminlte-v4.0.0-beta2-with-dist/dist/assets/img/user2-160x160.jpg') }}" class="user-image rounded-circle shadow" alt="User Image" /> <span class="d-none d-md-inline">{{ session['username'] }}</span></a>
               <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                 <!-- begin::User Image -->
                 <li class="user-header text-bg-primary">
                   <img src="{{ url_for('static', filename='adminlte-v4.0.0-beta2-with-dist/dist/assets/img/user2-160x160.jpg') }}" class="rounded-circle shadow" alt="User Image" />
                   <p>
-                    Alexander Pierce - Web Developer
+                    {{ session['username'] }}
                     <small>Member since Nov. 2023</small>
                   </p>
                 </li> <!-- end::User Image --> <!-- begin::Menu Body -->
-                <li class="user-body">
-                  <!-- begin::Row -->
-                  <div class="row">
-                    <div class="col-4 text-center">
-                      <a href="#">Followers</a>
-                    </div>
-                    <div class="col-4 text-center">
-                      <a href="#">Sales</a>
-                    </div>
-                    <div class="col-4 text-center">
-                      <a href="#">Friends</a>
-                    </div>
-                  </div> <!-- end::Row -->
-                </li> <!-- end::Menu Body --> <!-- begin::Menu Footer -->
                 <li class="user-footer">
-                  <a href="#" class="btn btn-default btn-flat">Profile</a> <a href="#" class="btn btn-default btn-flat float-end">Sign out</a>
+                  <a href="#" class="btn btn-default btn-flat float-end" data-bs-toggle="modal" data-bs-target="#modal-logout">Sign out</a>
                 </li> <!-- end::Menu Footer -->
               </ul>
             </li> <!-- end::User Menu Dropdown -->
