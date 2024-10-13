@@ -264,7 +264,7 @@
         const perPage = 5;
         
         $.ajax({
-          url: '/api/review-sp/1?page=' + page,
+          url: '/api/review-sp/{{ session.id_user }}?page=' + page,
           method: 'GET',
           dataType: 'json',
           success: function (data) {
