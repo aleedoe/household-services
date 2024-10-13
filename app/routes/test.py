@@ -1,4 +1,7 @@
+from flask import render_template, redirect, url_for
+
 from . import pageBlueprint, render_template
+from app.routes.auth import session
 
 @pageBlueprint.route('/')
 def test():
@@ -6,5 +9,8 @@ def test():
 
 @pageBlueprint.route('/home')
 def home():
-    return render_template('home.html', title='Home Page')
+    if 'is_logged_in' in session:
+        return render_template('home.html', title='Home Page')
+    else:
+        return redirect(url_for('pages.login_customer'))
 
