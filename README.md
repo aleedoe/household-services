@@ -11,6 +11,8 @@ install the required modules by typing in the **prompt** `pip install requiremen
 run the application by typing `python manage.py`
 
 ## Step 4: Route the application
+
+Login pages:
 - login admin: `http://127.0.0.1:5000/login-admin`
     - account admin:
         - username: admin1
@@ -26,3 +28,9 @@ run the application by typing `python manage.py`
         - username: serpro
         - password: 123
 
+
+Register pages:
+
+- register customer: `http://127.0.0.1:5000/register-customer` 
+
+- register service professional: `http://127.0.0.1:5000/register-service_pro`
