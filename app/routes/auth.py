@@ -101,7 +101,8 @@ def login_service_pro():
         api_url = 'http://localhost:5000/api/login-service_pro'
         api_data = {'loginName': login_name, 'loginPassword': password}
         response = requests.post(api_url, json=api_data)
-
+        print(response)
+        
         if response.status_code == 200:
             api_response = response.json()
 
@@ -110,14 +111,14 @@ def login_service_pro():
             session['username'] = api_response['user_name']
             session['id_user'] = api_response['user_id']
             session['role'] = 'service_pro'
-            return redirect(url_for('pages.home'))
+            return redirect(url_for('pages.service_professional_request'))
 
         flash('Invalid service professional credentials. Please try again.', 'error')
 
     if session.get('is_logged_in'):
-        return redirect(url_for('pages.home'))
+        return redirect(url_for('pages.service_professional_request'))
 
-    return render_template('login_service_pro.html')
+    return render_template('service_professional/login.html')
 
 
 @pageBlueprint.route('/register-service_pro', methods=['GET', 'POST'])
@@ -148,7 +149,7 @@ def register_service_pro():
 
         flash('Error registering service professional. Please try again.', 'error')
 
-    return render_template('register_service_pro.html')
+    return render_template('service_professional/register.html')
 
 
 @pageBlueprint.route('/logout-admin', methods=['GET'])

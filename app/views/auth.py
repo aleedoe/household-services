@@ -13,6 +13,10 @@ def login_customer():
 def register_customer():
     return controller_register_customer()
 
+@apiBlueprint.route('/api/login-service_pro', methods=['POST'])
+def login_service_pro():
+    return controller_service_pro_login()
+
 @apiBlueprint.route('/api/register-service_pro', methods=['POST'])
 def register_service_pro():
     return controller_register_service_pro()
