@@ -23,14 +23,14 @@ def login_admin():
             session['username'] = api_response['user_name']
             session['id_user'] = api_response['user_id']
             session['role'] = 'admin'
-            return redirect(url_for('pages.home'))
+            return redirect(url_for('pages.admin_services'))
 
         flash('Invalid admin credentials. Please try again.', 'error')
 
     if session.get('is_logged_in'):
         return redirect(url_for('pages.home'))
 
-    return render_template('login_admin.html')
+    return render_template('/admin/login.html')
 
 
 @pageBlueprint.route('/login-customer', methods=['GET', 'POST'])

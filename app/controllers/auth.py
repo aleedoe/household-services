@@ -4,16 +4,26 @@ from app.models import Admin, Customer, ServiceProfessional, db
 
 def controller_admin_login():
     try:
+        # Get JSON data from request
         data = request.get_json()
+        print(data)
 
         email_or_username = data['loginName']
         password = data['loginPassword']
 
+        # Query admin by username or email
         admin = Admin.query.filter((Admin.email == email_or_username) | (Admin.username == email_or_username)).first()
+        print(admin)
+
         if admin and admin.check_password(password):
+            # Login successful, return user data
             return jsonify(message="Login successful", user_id=admin.id, user_name=admin.username), 200
+        else:
+            # If admin not found or password is incorrect
+            return jsonify(error="Invalid credentials"), 401
 
     except Exception as error:
+        # Print error for debugging purposes
         print(f'Error logging in: {error}')
         return jsonify(error="Internal server error"), 500
 
