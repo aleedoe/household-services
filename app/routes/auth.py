@@ -3,14 +3,12 @@ import requests
 from app.routes import pageBlueprint, render_template
 
 
-# Admin login route
 @pageBlueprint.route('/login-admin', methods=['GET', 'POST'])
 def login_admin():
     if request.method == 'POST' and 'loginName' in request.form and 'loginPassword' in request.form:
         login_name = request.form['loginName']
         password = request.form['loginPassword']
 
-        # Mengirim data sebagai JSON
         api_url = 'http://localhost:5000/api/login-admin'
         api_data = {'loginName': login_name, 'loginPassword': password}
         response = requests.post(api_url, json=api_data)
@@ -18,7 +16,6 @@ def login_admin():
         if response.status_code == 200:
             api_response = response.json()
 
-            # Simpan session jika login berhasil
             session['is_logged_in'] = True
             session['username'] = api_response['user_name']
             session['id_user'] = api_response['user_id']
@@ -39,7 +36,6 @@ def login_customer():
         login_name = request.form['loginName']
         password = request.form['loginPassword']
 
-        # Mengirim data sebagai JSON
         api_url = 'http://localhost:5000/api/login-customer'
         api_data = {'loginName': login_name, 'loginPassword': password}
         response = requests.post(api_url, json=api_data)
@@ -47,7 +43,6 @@ def login_customer():
         if response.status_code == 200:
             api_response = response.json()
 
-            # Simpan session jika login berhasil
             session['is_logged_in'] = True
             session['username'] = api_response['user_name']
             session['id_user'] = api_response['user_id']
@@ -71,7 +66,6 @@ def register_customer():
         phone = request.form['phone']
         address = request.form['address']
 
-        # Mengirim data sebagai JSON
         api_url = 'http://localhost:5000/api/register-customer'
         api_data = {
             'username': username,
@@ -97,7 +91,6 @@ def login_service_pro():
         login_name = request.form['loginName']
         password = request.form['loginPassword']
 
-        # Mengirim data sebagai JSON
         api_url = 'http://localhost:5000/api/login-service_pro'
         api_data = {'loginName': login_name, 'loginPassword': password}
         response = requests.post(api_url, json=api_data)
@@ -106,7 +99,6 @@ def login_service_pro():
         if response.status_code == 200:
             api_response = response.json()
 
-            # Simpan session jika login berhasil
             session['is_logged_in'] = True
             session['username'] = api_response['user_name']
             session['id_user'] = api_response['user_id']
@@ -131,7 +123,6 @@ def register_service_pro():
         experience = request.form['experience']
         description = request.form.get('description', '')
 
-        # Mengirim data sebagai JSON
         api_url = 'http://localhost:5000/api/register-service_pro'
         api_data = {
             'username': username,
@@ -154,7 +145,6 @@ def register_service_pro():
 
 @pageBlueprint.route('/logout-admin', methods=['GET'])
 def logout_admin():
-    # Menghapus session admin
     session.pop('is_logged_in', None)
     session.pop('username', None)
     session.pop('id_user', None)
@@ -166,7 +156,6 @@ def logout_admin():
 
 @pageBlueprint.route('/logout-customer', methods=['GET'])
 def logout_customer():
-    # Menghapus session customer
     session.pop('is_logged_in', None)
     session.pop('username', None)
     session.pop('id_user', None)
@@ -178,7 +167,6 @@ def logout_customer():
 
 @pageBlueprint.route('/logout-service_pro', methods=['GET'])
 def logout_service_pro():
-    # Menghapus session service professional
     session.pop('is_logged_in', None)
     session.pop('username', None)
     session.pop('id_user', None)

@@ -4,26 +4,21 @@ from app.models import Admin, Customer, ServiceProfessional, db
 
 def controller_admin_login():
     try:
-        # Get JSON data from request
         data = request.get_json()
         print(data)
 
         email_or_username = data['loginName']
         password = data['loginPassword']
 
-        # Query admin by username or email
         admin = Admin.query.filter((Admin.email == email_or_username) | (Admin.username == email_or_username)).first()
         print(admin)
 
         if admin and admin.check_password(password):
-            # Login successful, return user data
             return jsonify(message="Login successful", user_id=admin.id, user_name=admin.username), 200
         else:
-            # If admin not found or password is incorrect
             return jsonify(error="Invalid credentials"), 401
 
     except Exception as error:
-        # Print error for debugging purposes
         print(f'Error logging in: {error}')
         return jsonify(error="Internal server error"), 500
 
@@ -54,20 +49,17 @@ def controller_register_customer():
         phone = data['phone']
         address = data['address']
 
-        # Cek apakah username atau email sudah ada
         if Customer.query.filter((Customer.username == username) | (Customer.email == email)).first():
             return jsonify(error="Username or email already exists"), 400
 
-        # Buat customer baru
         new_customer = Customer(
             username=username,
             email=email,
             phone=phone,
             address=address
         )
-        new_customer.set_password(password)  # Simpan password yang di-hash
+        new_customer.set_password(password)
 
-        # Tambahkan customer ke database
         db.session.add(new_customer)
         db.session.commit()
 
@@ -101,15 +93,13 @@ def controller_register_service_pro():
         username = data['username']
         password = data['password']
         email = data['email']
-        service_id = data['service_id']  # Id layanan yang terkait
-        description = data.get('description', '')  # Optional
+        service_id = data['service_id']
+        description = data.get('description', '')
         experience = data['experience']
 
-        # Cek apakah username atau email sudah ada
         if ServiceProfessional.query.filter((ServiceProfessional.username == username) | (ServiceProfessional.email == email)).first():
             return jsonify(error="Username or email already exists"), 400
 
-        # Buat service professional baru
         new_service_pro = ServiceProfessional(
             username=username,
             email=email,
@@ -117,9 +107,8 @@ def controller_register_service_pro():
             description=description,
             experience=experience
         )
-        new_service_pro.set_password(password)  # Simpan password yang di-hash
+        new_service_pro.set_password(password)
 
-        # Tambahkan service professional ke database
         db.session.add(new_service_pro)
         db.session.commit()
 
